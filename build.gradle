@@ -1,0 +1,43 @@
+apply plugin: 'idea'
+apply plugin: 'java'
+
+idea {
+    project {
+        //Set specific jdk and language level
+        jdkName = '1.8'
+        languageLevel = '1.8'
+    }
+    module {
+        downloadSources = true
+    }
+}
+
+repositories {
+    // Central Repository
+    mavenCentral()
+}
+
+def downloadLib = { fileUrl, name ->
+    def myFile = file("libs/${name}.jar")
+    myFile.parentFile.mkdirs()
+    if (!myFile.exists()) {
+        new URL(fileUrl).withInputStream { downloadStream ->
+            myFile.withOutputStream { fileOut ->
+                fileOut << downloadStream
+            }
+        }
+    }
+    files(myFile.absolutePath)
+}
+
+dependencies {
+    /* Compile scope */
+    implementation downloadLib('https://github.com/FacultadDeIngenieria/anaydis-jars/blob/master/anaydis-anim/1.3.8/anaydis-anim.jar?raw=true', 'anaydis-anim')
+    implementation downloadLib('https://github.com/FacultadDeIngenieria/anaydis-jars/blob/master/anaydis-base/1.3.8/anaydis-base.jar?raw=true', 'anaydis-base')
+    implementation 'org.jetbrains:annotations:22.0.0'
+
+    /* Test scope */
+    testImplementation downloadLib('https://github.com/FacultadDeIngenieria/anaydis-jars/blob/master/anaydis-test/1.3.8/anaydis-test.jar?raw=true', 'anaydis-test')
+    testImplementation 'org.assertj:assertj-core:3.20.2'
+    testImplementation 'junit:junit:4.13'
+}

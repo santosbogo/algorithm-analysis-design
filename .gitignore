@@ -1,0 +1,14 @@
+build
+.idea/
+.vscode/
+libs/
+bin/
+target/
+.idea_modules/
+.history
+out
+.DS_Store
+.gradle
+*.iws
+*.iml
+*.ipr
