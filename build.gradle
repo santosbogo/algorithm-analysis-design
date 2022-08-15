@@ -41,3 +41,11 @@ dependencies {
     testImplementation 'org.assertj:assertj-core:3.20.2'
     testImplementation 'junit:junit:4.13'
 }
+
+task downloadLibSources() {
+    downloadLib('https://github.com/FacultadDeIngenieria/anaydis-jars/blob/master/anaydis-anim/1.3.8/anaydis-anim-src.jar?raw=true', 'anaydis-anim-src')
+    downloadLib('https://github.com/FacultadDeIngenieria/anaydis-jars/blob/master/anaydis-base/1.3.8/anaydis-base-src.jar?raw=true', 'anaydis-base-src')
+    downloadLib('https://github.com/FacultadDeIngenieria/anaydis-jars/blob/master/anaydis-test/1.3.8/anaydis-test-src.jar?raw=true', 'anaydis-test-src')
+}
+
+compileJava.dependsOn downloadLibSources
