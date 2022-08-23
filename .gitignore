@@ -12,3 +12,4 @@ out
 *.iws
 *.iml
 *.ipr
+gradle.properties

@@ -15,37 +15,25 @@ idea {
 repositories {
     // Central Repository
     mavenCentral()
-}
 
-def downloadLib = { fileUrl, name ->
-    def myFile = file("libs/${name}.jar")
-    myFile.parentFile.mkdirs()
-    if (!myFile.exists()) {
-        new URL(fileUrl).withInputStream { downloadStream ->
-            myFile.withOutputStream { fileOut ->
-                fileOut << downloadStream
-            }
+    // GitHub Packages
+    maven {
+        url = uri("https://maven.pkg.github.com/FacultadDeIngenieria/*")
+        credentials {
+            username = "public"
+            password = project.findProperty("gpr.token") ?: System.getProperty("gpr.token") ?: System.getenv("GH_TOKEN")
         }
     }
-    files(myFile.absolutePath)
 }
 
 dependencies {
     /* Compile scope */
-    implementation downloadLib('https://github.com/FacultadDeIngenieria/anaydis-jars/blob/master/anaydis-anim/1.3.8/anaydis-anim.jar?raw=true', 'anaydis-anim')
-    implementation downloadLib('https://github.com/FacultadDeIngenieria/anaydis-jars/blob/master/anaydis-base/1.3.8/anaydis-base.jar?raw=true', 'anaydis-base')
+    implementation 'ar.edu.austral.fi.anaydis:anaydis-anim:1.3.8'
+    implementation 'ar.edu.austral.fi.anaydis:anaydis-base:1.3.8'
     implementation 'org.jetbrains:annotations:22.0.0'
 
     /* Test scope */
-    testImplementation downloadLib('https://github.com/FacultadDeIngenieria/anaydis-jars/blob/master/anaydis-test/1.3.8/anaydis-test.jar?raw=true', 'anaydis-test')
+    testImplementation 'ar.edu.austral.fi.anaydis:anaydis-test:1.3.8'
     testImplementation 'org.assertj:assertj-core:3.20.2'
     testImplementation 'junit:junit:4.13'
 }
-
-task downloadLibSources() {
-    downloadLib('https://github.com/FacultadDeIngenieria/anaydis-jars/blob/master/anaydis-anim/1.3.8/anaydis-anim-src.jar?raw=true', 'anaydis-anim-src')
-    downloadLib('https://github.com/FacultadDeIngenieria/anaydis-jars/blob/master/anaydis-base/1.3.8/anaydis-base-src.jar?raw=true', 'anaydis-base-src')
-    downloadLib('https://github.com/FacultadDeIngenieria/anaydis-jars/blob/master/anaydis-test/1.3.8/anaydis-test-src.jar?raw=true', 'anaydis-test-src')
-}
-
-compileJava.dependsOn downloadLibSources
