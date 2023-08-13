@@ -33,7 +33,8 @@ public class IntegerDataSetGenerator implements DataSetGenerator<Integer> {
         List<Integer> list = new ArrayList<>();
 
         for (int i = length; i > 0; i--){
-            list.add(random.nextInt(0, length*4));
+            int rand = random.nextInt(0, length*4);
+            list.add(rand);
         }
         return list;
     }
