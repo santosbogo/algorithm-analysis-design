@@ -11,7 +11,7 @@ public class SorterProviderTest {
 
     /** Return SorterProvider. */
     private SorterProvider createSorterProvider() {
-        throw new IllegalStateException("To be implemented!");
+        return new SorterProviderSort();
     }
 
     /** Test getAllSorters method to return an iterable containing all implemented sorters. */

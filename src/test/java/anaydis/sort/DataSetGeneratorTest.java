@@ -12,11 +12,11 @@ import static org.assertj.core.api.Assertions.assertThat;
 public class DataSetGeneratorTest {
 
     private DataSetGenerator<String> createStringDataSetGenerator() {
-        throw new IllegalStateException("To be implemented!");
+        return new StringDataSetGenerator();
     }
 
     private DataSetGenerator<Integer> createIntegerDataSetGenerator() {
-        throw new IllegalStateException("To be implemented!");
+        return new IntegerDataSetGenerator();
     }
 
     /** Test create ascending size and sort. */
