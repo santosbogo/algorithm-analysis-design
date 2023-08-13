@@ -12,8 +12,8 @@ public class InsertionSorter extends AbstractSorter{
         int size = list.size();
         for (int i = 1; i < size; i++){
             for (int j = i; j > 0; j--){
-                if (less(list.get(i), list.get(j-1), comparator)){
-                    exch(list, i, j);
+                if (less(list.get(j), list.get(j-1), comparator)){
+                    exch(list, j, j-1);
                 }
                 else break;
             }
