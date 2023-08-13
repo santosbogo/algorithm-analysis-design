@@ -12,7 +12,7 @@ public class SelectionSorter extends AbstractSorter {
         for (int i = 0; i < size; i++){
             int min = i;
             for (int j = i + 1; j < size; j++){
-                if (less(min, list.get(j), comparator))
+                if (less(list.get(j), list.get(min), comparator))
                     min = j;
             }
             exch(list, i, min);
