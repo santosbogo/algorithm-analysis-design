@@ -10,9 +10,9 @@ public class SorterProviderSort implements SorterProvider {
     private Map<SorterType, Sorter> sorters = new EnumMap<>(SorterType.class);
 
     public SorterProviderSort(){
-        sorters.put(SorterType.SELECTION, new SelectionSorter());
-        sorters.put(SorterType.INSERTION, new InsertionSorter());
-        sorters.put(SorterType.BUBBLE, new BubbleSorter());
+        sorters.put(SorterType.SELECTION, new SelectionSorter(SorterType.SELECTION));
+        sorters.put(SorterType.INSERTION, new InsertionSorter(SorterType.INSERTION));
+        sorters.put(SorterType.BUBBLE, new BubbleSorter(SorterType.BUBBLE));
     }
 
     @Override

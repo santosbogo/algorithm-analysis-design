@@ -6,12 +6,16 @@ import java.util.Comparator;
 import java.util.List;
 
 public class BubbleSorter extends AbstractSorter{
+    public BubbleSorter(@NotNull SorterType type) {
+        super(SorterType.BUBBLE);
+    }
+
     @Override
     public <T> void sort(@NotNull Comparator<T> comparator, @NotNull List<T> list) {
         int size = list.size();
         for (int i = 0; i < size; i++){
             for (int j = 0; j < size-1; j++){
-                if (less(list.get(j+1), list.get(j), comparator)) // If j+1 < j -> exchange
+                if (less(list, j+1, j, comparator)) // If j+1 < j -> exchange
                     exch(list, j, j+1);
             }
         }
