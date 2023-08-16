@@ -7,7 +7,7 @@ import java.util.List;
 
 public class InsertionSorter extends AbstractSorter{
 
-    public InsertionSorter(@NotNull SorterType type) {
+    public InsertionSorter() {
         super(SorterType.INSERTION);
     }
 
@@ -18,9 +18,14 @@ public class InsertionSorter extends AbstractSorter{
             for (int j = i; j > 0; j--){
                 if (less(list, j, j-1, comparator)){
                     exch(list, j, j-1);
+                    notifyCopy(j, j+1, true);
                 }
-                else break;
+                else {
+                    notifyCopy(i, j + 1, false);
+                    break;
+                }
             }
+
         }
     }
 

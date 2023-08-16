@@ -23,7 +23,7 @@ public class FullNameTest {
         person.add(pers2);
         person.add(pers3);
 
-        BubbleSorter sorter = new BubbleSorter(SorterType.BUBBLE);
+        BubbleSorter sorter = new BubbleSorter();
         sorter.sort(new NameComparator(), person);
 
         Iterator<FullName> iter = person.iterator();
@@ -31,7 +31,5 @@ public class FullNameTest {
         assertThat(pers3).isEqualTo(iter.next());
         assertThat(pers1).isEqualTo(iter.next());
         assertThat(pers2).isEqualTo(iter.next());
-
     }
-
 }

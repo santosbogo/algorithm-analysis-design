@@ -60,11 +60,11 @@ abstract class AbstractSorter<T> implements ObservableSorter{
         listeners.forEach(l -> l.swap(i, j));
     }
 
-    private void notifyCopy(final int from, final int to, boolean CopyToAux) {
+    void notifyCopy(final int from, final int to, boolean CopyToAux) {
         listeners.forEach(l -> l.copy(from, to, CopyToAux));
     }
 
-    private void notifyEqual(final int i, final int j) {
+    void notifyEqual(final int i, final int j) {
         listeners.forEach(l -> l.equals(i, j));
     }
     private void notifyLess(final int i, final int j) {
