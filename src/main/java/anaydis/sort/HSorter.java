@@ -12,26 +12,21 @@ public class HSorter extends AbstractSorter {
     }
 
     public <T> void sort(Comparator<T> comparator, List<T> list){
-        sort(comparator, list, 4);
+        sort(comparator, list, 1);
     }
 
     /**
      * H-Sort list. Basically a BubbleSort in sets of elements separated by h
      */
-    public <T> void sort(Comparator<T> comparator, List<T> list, int h)
-    {
+    public <T> void sort(Comparator<T> comparator, List<T> list, int h) {
         int size = list.size();
-        for(int i = 0; i < size - h; i++){
-            int temp = i;
-            int j = temp + h;
-            if (less(list, j, i, comparator)){
-                exch(list, i, j);
-                while (less(list, j, j-h,comparator) && j-h >= 0){
-                    exch(list, j-h, j);
-                    j = j-h;
+        for(int i = 0; i < size - h; i++) {
+            for (int j = 0; j < size - h; j += h) {
+                notifyBox(j, j + h);
+                if (less(list, j + h, j, comparator)){ // If j+1 < j -> exchange
+                    exch(list, j, j + h);
                 }
             }
-
         }
     }
         @Override

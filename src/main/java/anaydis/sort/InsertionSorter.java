@@ -16,16 +16,14 @@ public class InsertionSorter extends AbstractSorter{
         int size = list.size();
         for (int i = 1; i < size; i++){
             for (int j = i; j > 0; j--){
+                notifyBox(j-1, j);
                 if (less(list, j, j-1, comparator)){
                     exch(list, j, j-1);
-                    notifyCopy(j, j+1, true);
                 }
                 else {
-                    notifyCopy(i, j + 1, false);
                     break;
                 }
             }
-
         }
     }
 

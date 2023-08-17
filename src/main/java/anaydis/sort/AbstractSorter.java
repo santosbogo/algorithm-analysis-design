@@ -24,9 +24,7 @@ abstract class AbstractSorter<T> implements ObservableSorter{
 
     boolean less(List<T> list, int a, int b, Comparator<T> comparator) {
         boolean result = comparator.compare(list.get(a), list.get(b)) < 0;
-        if (result) {
-            notifyLess(a, b);
-        }
+        notifyLess(a, b);
         return result;
     }
 
@@ -63,7 +61,6 @@ abstract class AbstractSorter<T> implements ObservableSorter{
     void notifyCopy(final int from, final int to, boolean CopyToAux) {
         listeners.forEach(l -> l.copy(from, to, CopyToAux));
     }
-
     void notifyEqual(final int i, final int j) {
         listeners.forEach(l -> l.equals(i, j));
     }

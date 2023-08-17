@@ -1,6 +1,8 @@
 package anaydis.sort.NameSorting;
 
 import anaydis.sort.BubbleSorter;
+import anaydis.sort.HSorter;
+import anaydis.sort.InsertionSorter;
 import anaydis.sort.SorterType;
 import org.junit.Test;
 
@@ -8,7 +10,6 @@ import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.Assert.assertThrows;
 
 public class FullNameTest {
     @Test
@@ -23,7 +24,7 @@ public class FullNameTest {
         person.add(pers2);
         person.add(pers3);
 
-        BubbleSorter sorter = new BubbleSorter();
+        InsertionSorter sorter = new InsertionSorter();
         sorter.sort(new NameComparator(), person);
 
         Iterator<FullName> iter = person.iterator();

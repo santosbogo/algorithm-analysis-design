@@ -16,12 +16,13 @@ public class SelectionSorter extends AbstractSorter {
         for (int i = 0; i < size; i++){
             int min = i;
             for (int j = i + 1; j < size; j++) {
+                notifyBox(min, j);
                 if (less(list, j, min, comparator)){
                     min = j;
-                    notifyBox(j, min);
                 }
             }
-            exch(list, i, min);
+            if(i != min)
+                exch(list, i, min);
         }
     }
 
