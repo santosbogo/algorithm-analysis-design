@@ -1,5 +1,4 @@
 package anaydis.sort;
-
 import org.jetbrains.annotations.NotNull;
 
 import java.util.Comparator;
@@ -12,30 +11,27 @@ public class QuickSorter extends AbstractSorter {
 
     @Override
     public <T> void sort(@NotNull Comparator<T> comparator, @NotNull List<T> list) {
-        sort(comparator, list, 0, list.size()-1);
+        sort(list, comparator, 0, list.size() - 1);
     }
 
-    private <T> void sort(Comparator<T> comparator, List<T> list, int start, int end){
-        if (end >= start){return;}
-
-        int pivot = partition(comparator, list, start, end);
-
-        sort(comparator, list, start, pivot-1);
-        sort(comparator, list, pivot+1, end);
+    private <T> void sort(List<T> list, Comparator<T> comparator, int low, int high) {
+        if (low < high) {
+            int partitionIndex = partition(list, comparator, low, high);
+            sort(list, comparator, low, partitionIndex - 1);
+            sort(list, comparator, partitionIndex + 1, high);
+        }
     }
 
-    private <T> int partition(Comparator<T> comparator, List<T> list, int start, int end) {
-        int i = start-1;
-
-        for (int j= start; j <= end-1; j++){
-            if (less(list, j, end, comparator)) {
+    private <T> int partition(List<T> list, Comparator<T> comparator, int low, int high) {
+        int i = low - 1;
+        for (int j = low; j < high; j++) {
+            if (less(list, j, high, comparator)) {
                 i++;
                 exch(list, i, j);
             }
         }
-        i++;
-        exch(list, i, end);
-        return i;
+        exch(list, i + 1, high);
+        return i + 1;
     }
 
     @Override
