@@ -11,11 +11,23 @@ public class ShellSorter extends AbstractSorter{
     }
     @Override
     public <T> void sort(@NotNull Comparator<T> comparator, @NotNull List<T> list) {
-        HSorter Hsorter = new HSorter();
-        for (int h = list.size()/2; h > 1; h/=2){
-            Hsorter.sort(comparator, list, h);
+        int size = list.size();
+        int h = 1;
+
+        while (h < size / 3) {
+            h = 3 * h + 1;
+        }
+
+        while (h >= 1) {
+            for (int i = h; i < size; i++) {
+                for (int j = i; j >= h && less(list, j, j - h, comparator); j -= h) {
+                    exch(list, j, j - h);
+                }
+            }
+            h = h / 3;
         }
     }
+
 
     @Override
     public @NotNull SorterType getType() {
