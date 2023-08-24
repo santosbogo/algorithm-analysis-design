@@ -41,6 +41,40 @@ abstract class AbstractSorter<T> implements ObservableSorter{
         }
     }
 
+    int partition(List<T> list, Comparator<T> comparator, int low, int high) {
+        int i = low - 1;
+        for (int j = low; j < high; j++) {
+            if (less(list, j, high, comparator)) {
+                i++;
+                exch(list, i, j);
+            }
+        }
+        exch(list, i + 1, high);
+        return i + 1; // This value is a position, the left elements are all less and the right elements are all big
+    }
+
+    void merge(Comparator<T> comparator, List<T> list, List<T> temp, int low, int mid, int high){
+        int i = low;
+        int j = mid + 1;
+
+        for (int k = low; k <= high; k++) {
+            temp.set(k, list.get(k));
+        }
+
+        for (int k = low; k <= high; k++) {
+            if (i > mid) {
+                list.set(k, temp.get(j++));
+            } else if (j > high) {
+                list.set(k, temp.get(i++));
+            } else if (less(temp, j, i, comparator)) {
+                list.set(k, temp.get(j++));
+            } else {
+                list.set(k, temp.get(i++));
+            }
+        }
+    }
+
+
     //Listener Methods
     public void addSorterListener(@NotNull final SorterListener listener) {
         listeners.add(listener);
