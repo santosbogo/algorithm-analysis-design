@@ -24,7 +24,6 @@ public class SorterData {
     }
 
     public Sorter getSorter() {
-
         return sorter;
     }
 }

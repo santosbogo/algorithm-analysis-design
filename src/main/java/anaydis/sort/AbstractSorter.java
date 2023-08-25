@@ -93,6 +93,6 @@ abstract class AbstractSorter<T> implements ObservableSorter{
     }
 
     private void notifyLess(final int i, final int j) {
-        listeners.forEach(l -> l.equals(j, i));
+        listeners.forEach(l -> l.greater(j, i));
     }
 }

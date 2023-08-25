@@ -19,6 +19,7 @@ public class BubbleSorter extends AbstractSorter{
                 if (less(list, j + 1, j, comparator)){ // If j+1 < j -> exchange
                     exch(list, j, j + 1);
                 }
+                if (j == size - i - 1) break;
             }
         }
     }

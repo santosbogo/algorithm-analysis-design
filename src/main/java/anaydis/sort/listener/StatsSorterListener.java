@@ -7,14 +7,10 @@ public class StatsSorterListener implements SorterListener {
     private int swap = 0;
 
     @Override
-    public void box(int from, int to) {
-
-    }
+    public void box(int from, int to) {}
 
     @Override
-    public void copy(int from, int to, boolean copyToAux) {
-
-    }
+    public void copy(int from, int to, boolean copyToAux) {}
 
     @Override
     public void equals(int i, int j) {
