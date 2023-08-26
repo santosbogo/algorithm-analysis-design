@@ -21,7 +21,7 @@ public class HSorter extends AbstractSorter {
     public <T> void sort(Comparator<T> comparator, List<T> list, int h) {
         int size = list.size();
         for(int i = 0; i < size - h; i++) {
-            for (int j = 0; j < size - h; j += h) {
+            for (int j = 0; j < size - i - h; j += h) { //Size - i - h It is for not compare ordered items
                 notifyBox(j, j + h);
                 if (less(list, j + h, j, comparator)){ // If j+1 < j -> exchange
                     exch(list, j, j + h);
