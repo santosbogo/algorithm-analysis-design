@@ -15,14 +15,10 @@ public class TopDownMergeSorter extends AbstractSorter{
     @Override
     public <T> void sort(@NotNull Comparator<T> comparator, @NotNull List<T> list) {
         List<T> temp = new ArrayList<>(list);
-//        for (int i = 0; i < list.size(); i++){
-//            notifyCopy(i, i, true);
-//        }
         sort(comparator, list, temp, 0, list.size() - 1);
     }
 
     private <T> void sort(Comparator<T> comparator, List<T> list, List<T> temp, int low, int high){
-
         if (low < high){
 
             int mid = (low + high) / 2;
