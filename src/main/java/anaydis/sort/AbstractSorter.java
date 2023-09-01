@@ -15,8 +15,10 @@ import java.util.List;
 abstract class AbstractSorter<T> implements ObservableSorter{
 
     private final List<SorterListener> listeners;
+    private final SorterType type;
 
     AbstractSorter(@NotNull final SorterType type) {
+        this.type = type;
         listeners = new LinkedList<>();
     }
 
@@ -68,25 +70,23 @@ abstract class AbstractSorter<T> implements ObservableSorter{
 
         for (int k = low; k <= high; k++) {
             temp.set(k, list.get(k));
-            //notifyCopy();
+//            notifyCopy(k, k, true);
         }
 
 
         for (int k = low; k <= high; k++) {
             if (i > mid) {
                 list.set(k, temp.get(j++));
-                notifyCopy(i, k, false);
-                notifySwap(i, k);
+                notifyCopy(k, j - 1, false);
             } else if (j > high) {
                 list.set(k, temp.get(i++));
-                notifyCopy(i, k, true);
-                notifySwap(i, k);
+                notifyCopy(k, i - 1, false);
             } else if (less(temp, j, i, comparator)) {
                 list.set(k, temp.get(j++));
-                notifyCopy(i, k, false);
+                notifyCopy(k, j - 1, false);
             } else {
                 list.set(k, temp.get(i++));
-                notifyCopy(i, k, true);
+                notifyCopy(k, i -1, false);
             }
         }
     }
