@@ -6,9 +6,9 @@ import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
 
-public class TopDownMergeSorter extends AbstractSorter{
+public class MergeTopDownSorter extends AbstractSorter{
 
-    public TopDownMergeSorter(){
+    public MergeTopDownSorter(){
         super(SorterType.MERGE_TOP_DOWN);
     }
 
@@ -19,6 +19,7 @@ public class TopDownMergeSorter extends AbstractSorter{
     }
 
     private <T> void sort(Comparator<T> comparator, List<T> list, List<T> temp, int low, int high){
+
         if (low < high){
 
             int mid = (low + high) / 2;

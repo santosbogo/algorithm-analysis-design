@@ -16,7 +16,7 @@ public class BenchmarkRunner {
         sorter.sort(dataSetGenerator.getComparator(), list);
         long time = (System.nanoTime()-startTime)/1000;
         sorter.removeSorterListener(stats);
-        return new BenchmarkResult(time, stats.getSwaps(), stats.getComparisons());
+        return new BenchmarkResult(time, stats.getComparisons(), stats.getSwaps());
     }
 
     private <T> List<T> getList(final DataSetGenerator<T> dataSetGenerator, final BenchmarkRunCase benchmarkRunCase, final int size){

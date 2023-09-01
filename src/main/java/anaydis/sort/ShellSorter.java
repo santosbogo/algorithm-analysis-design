@@ -14,7 +14,7 @@ public class ShellSorter extends AbstractSorter{
         int size = list.size();
         int h = 1;
 
-        while (h < size / 3) {
+        while (h <= size / 9) {
             h = 3 * h + 1;
         }
 
@@ -27,7 +27,6 @@ public class ShellSorter extends AbstractSorter{
             h = h / 3;
         }
     }
-
 
     @Override
     public @NotNull SorterType getType() {

@@ -15,10 +15,8 @@ import java.util.List;
 abstract class AbstractSorter<T> implements ObservableSorter{
 
     private final List<SorterListener> listeners;
-    private final SorterType type;
 
     AbstractSorter(@NotNull final SorterType type) {
-        this.type = type;
         listeners = new LinkedList<>();
     }
 
@@ -42,15 +40,26 @@ abstract class AbstractSorter<T> implements ObservableSorter{
     }
 
     int partition(List<T> list, Comparator<T> comparator, int low, int high) {
-        int i = low - 1;
-        for (int j = low; j < high; j++) {
-            if (less(list, j, high, comparator)) {
-                i++;
-                exch(list, i, j);
+        int a = low; //Left pointer
+        int b = high; //Right pointer
+
+        while(a < b){
+            //Moving the left pointer to the right until it finds a bigger than the pivot
+            while(less(list, a, high, comparator)){
+                a++;
+                if (a == b) break;
             }
+            //Moving the right pointer to the left until it finds a lower than the pivot
+            while (!less(list, b, high, comparator)){
+                notifyGreater(a, b);
+                --b;
+                if (a == b) break;
+            }
+
+            exch(list, a, b);
         }
-        exch(list, i + 1, high);
-        return i + 1; // This value is a position, the left elements are all less and the right elements are all big
+        exch(list, a, high); //Move the pivot to the partitioning position
+        return a; //Partitioning position, the left elements are all less and the right elements are all big
     }
 
     void merge(Comparator<T> comparator, List<T> list, List<T> temp, int low, int mid, int high){
@@ -59,17 +68,25 @@ abstract class AbstractSorter<T> implements ObservableSorter{
 
         for (int k = low; k <= high; k++) {
             temp.set(k, list.get(k));
+            //notifyCopy();
         }
+
 
         for (int k = low; k <= high; k++) {
             if (i > mid) {
                 list.set(k, temp.get(j++));
+                notifyCopy(i, k, false);
+                notifySwap(i, k);
             } else if (j > high) {
                 list.set(k, temp.get(i++));
+                notifyCopy(i, k, true);
+                notifySwap(i, k);
             } else if (less(temp, j, i, comparator)) {
                 list.set(k, temp.get(j++));
+                notifyCopy(i, k, false);
             } else {
                 list.set(k, temp.get(i++));
+                notifyCopy(i, k, true);
             }
         }
     }
@@ -93,6 +110,15 @@ abstract class AbstractSorter<T> implements ObservableSorter{
     }
 
     private void notifyLess(final int i, final int j) {
+        listeners.forEach(l -> l.greater(i, j));
+    }
+
+    private void notifyGreater(final int i, final int j){
         listeners.forEach(l -> l.greater(j, i));
     }
+
+    void notifyCopy(final int i, final int j, boolean fromSource){
+        listeners.forEach(l -> l.copy(i, j, fromSource));
+    }
+
 }

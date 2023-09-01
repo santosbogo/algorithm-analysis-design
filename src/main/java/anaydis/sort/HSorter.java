@@ -29,6 +29,7 @@ public class HSorter extends AbstractSorter {
             }
         }
     }
+
         @Override
     public @NotNull SorterType getType() {
         return SorterType.H;

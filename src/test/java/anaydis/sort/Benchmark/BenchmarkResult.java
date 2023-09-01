@@ -1,20 +1,20 @@
 package anaydis.sort.Benchmark;
 
 public class BenchmarkResult {
-    private int comparisons;
-    private int swaps;
+    private long comparisons;
+    private long swaps;
     private long time;
 
-    BenchmarkResult(long time, int comparisons, int swaps){
+    BenchmarkResult(long time, long comparisons, long swaps){
         this.comparisons=comparisons;
         this.swaps=swaps;
         this.time = time;
     }
 
-    int getComparisons(){
+    long getComparisons(){
         return comparisons;
     }
-    int getSwaps(){
+    long getSwaps(){
         return swaps;
     }
     long getTime(){

@@ -26,7 +26,6 @@ public class BenchmarkMain {
                             result.getComparisons() + "\t|\t" +
                             result.getTime());
                     System.out.println();
-
                 }
             }
         }
