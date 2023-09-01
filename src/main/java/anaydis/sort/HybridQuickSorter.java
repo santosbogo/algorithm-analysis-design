@@ -5,11 +5,11 @@ import org.jetbrains.annotations.NotNull;
 import java.util.Comparator;
 import java.util.List;
 
-public class QuickHybridSorter extends AbstractSorter{
+public class HybridQuickSorter extends AbstractSorter{
 
     private final static int M = 10;
 
-    public QuickHybridSorter() {
+    public HybridQuickSorter() {
         super(SorterType.QUICK_CUT);
     }
 

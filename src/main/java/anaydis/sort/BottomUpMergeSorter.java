@@ -5,9 +5,9 @@ import org.jetbrains.annotations.NotNull;
 import java.util.Comparator;
 import java.util.List;
 
-public class MergeBottomUpSorter extends AbstractSorter{
+public class BottomUpMergeSorter extends AbstractSorter{
 
-    public MergeBottomUpSorter(){
+    public BottomUpMergeSorter(){
         super(SorterType.MERGE_BOTTOM_UP);
     }
 

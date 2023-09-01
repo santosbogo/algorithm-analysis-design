@@ -70,7 +70,7 @@ abstract class AbstractSorter<T> implements ObservableSorter{
 
         for (int k = low; k <= high; k++) {
             temp.set(k, list.get(k));
-//            notifyCopy(k, k, true);
+            notifyCopy(k, k, true);
         }
 
 

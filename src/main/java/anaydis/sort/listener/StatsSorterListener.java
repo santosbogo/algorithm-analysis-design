@@ -5,15 +5,12 @@ import anaydis.sort.gui.SorterListener;
 public class StatsSorterListener implements SorterListener {
     private long comp = 0;
     private long swap = 0;
-    private long copy = 0;
 
     @Override
     public void box(int from, int to) {}
 
     @Override
-    public void copy(int from, int to, boolean copyToAux) {
-        copy++;
-    }
+    public void copy(int from, int to, boolean copyToAux) {}
 
     @Override
     public void equals(int i, int j) {
@@ -37,9 +34,4 @@ public class StatsSorterListener implements SorterListener {
     public long getSwaps(){
         return swap;
     }
-
-    public long getCopies(){
-        return copy;
-    }
-
 }

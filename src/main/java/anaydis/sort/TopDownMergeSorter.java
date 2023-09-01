@@ -6,15 +6,18 @@ import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
 
-public class MergeTopDownSorter extends AbstractSorter{
+public class TopDownMergeSorter extends AbstractSorter{
 
-    public MergeTopDownSorter(){
+    public TopDownMergeSorter(){
         super(SorterType.MERGE_TOP_DOWN);
     }
 
     @Override
     public <T> void sort(@NotNull Comparator<T> comparator, @NotNull List<T> list) {
         List<T> temp = new ArrayList<>(list);
+//        for (int i = 0; i < list.size(); i++){
+//            notifyCopy(i, i, true);
+//        }
         sort(comparator, list, temp, 0, list.size() - 1);
     }
 
