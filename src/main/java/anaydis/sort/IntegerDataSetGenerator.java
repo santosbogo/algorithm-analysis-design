@@ -29,7 +29,7 @@ public class IntegerDataSetGenerator implements DataSetGenerator<Integer> {
 
     @Override
     public @NotNull List createRandom(int length) {
-        Random random = new Random();
+        Random random = new Random(3);
         List<Integer> list = new ArrayList<>();
 
         for (int i = length; i > 0; i--){

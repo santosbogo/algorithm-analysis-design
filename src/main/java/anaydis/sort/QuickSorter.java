@@ -16,7 +16,7 @@ public class QuickSorter extends AbstractSorter {
     }
 
     private <T> void sort(List<T> list, Comparator<T> comparator, int low, int high) {
-        if (low < high) {
+        if (low <= high) {
             int partitionIndex = partition(list, comparator, low, high);
             sort(list, comparator, low, partitionIndex - 1);
             sort(list, comparator, partitionIndex + 1, high);
