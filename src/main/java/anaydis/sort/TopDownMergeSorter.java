@@ -15,6 +15,7 @@ public class TopDownMergeSorter extends AbstractSorter{
     @Override
     public <T> void sort(@NotNull Comparator<T> comparator, @NotNull List<T> list) {
         List<T> temp = new ArrayList<>(list);
+        notifyCopy(0, list.size()-1 , true);
         sort(comparator, list, temp, 0, list.size() - 1);
     }
 
