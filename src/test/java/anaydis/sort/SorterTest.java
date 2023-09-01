@@ -4,6 +4,7 @@ import org.junit.Test;
 
 import java.util.Comparator;
 import java.util.Iterator;
+import java.util.LinkedList;
 import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -74,7 +75,7 @@ abstract class SorterTest extends AbstractSorterTest {
         Iterator<Integer> javaIter = javaRandom.iterator();
 
         //Now sort with the method i want to test
-        QuickHybridSorter sorter = new QuickHybridSorter();
+        HybridQuickSorter sorter = new HybridQuickSorter();
         sorter.sort(Comparator.naturalOrder(), random);
 
         //Compare the results
@@ -131,7 +132,7 @@ abstract class SorterTest extends AbstractSorterTest {
         Iterator<Integer> javaIter = javaRandom.iterator();
 
         //Now sort with the method i want to test
-        MergeBottomUpSorter sorter = new MergeBottomUpSorter();
+        BottomUpMergeSorter sorter = new BottomUpMergeSorter();
         sorter.sort(Comparator.naturalOrder(), random);
 
         //Compare the results
@@ -150,7 +151,7 @@ abstract class SorterTest extends AbstractSorterTest {
         Iterator<Integer> javaIter = javaRandom.iterator();
 
         //Now sort with the method i want to test
-        MergeTopDownSorter sorter = new MergeTopDownSorter();
+        TopDownMergeSorter sorter = new TopDownMergeSorter();
         sorter.sort(Comparator.naturalOrder(), random);
 
         //Compare the results
