@@ -12,23 +12,38 @@ public class BenchmarkMain {
         final DataSetGenerator<Integer> dataSetGenerator = new IntegerDataSetGenerator();
         final BenchmarkRunCase[]  runCases= BenchmarkRunCase.values();
         final BenchmarkRunner runner = new BenchmarkRunner();
+        // GOOD FOR READING:
+//        for(Sorter sorter: sorterProvider.getAllSorters()){
+//            System.out.println(sorter.getType());
+//            for (int size: sizes){
+//                System.out.println("\nFor " + size + " elements:");
+//                for (BenchmarkRunCase runCase: runCases){
+//                    final SorterData sorterData = new SorterData(sorter, runCase, size);
+//                    final BenchmarkResult result = runner.run(sorterData, dataSetGenerator);
+//                    System.out.println(runCase + ": Swaps = " +
+//                            result.getSwaps() + " \tComparisons = " +
+//                            result.getComparisons() + "\tTime (ms) = " +
+//                            result.getTime());
+//                }
+//            }
+//        }
 
-        System.out.println("Type:\t|\tSize\t|\tRun Case\t|\tSwaps\t|\tComparisons\t|\tTime (microseconds) ");
-        for(int size: sizes){
-            for (Sorter sorter: sorterProvider.getAllSorters()){
+
+        //GOOD FOR EXCEL:
+        System.out.println("Run case;Swaps;Comparisons;Time(ms)");
+        for(Sorter sorter: sorterProvider.getAllSorters()){
+            System.out.println(sorter.getType());
+            for (int size: sizes){
+                System.out.println("Elements:;" + size);
                 for (BenchmarkRunCase runCase: runCases){
                     final SorterData sorterData = new SorterData(sorter, runCase, size);
                     final BenchmarkResult result = runner.run(sorterData, dataSetGenerator);
-                    System.out.println(sorterData.getSorter().getType() + "\t|\t" +
-                            size + "\t|\t" +
-                            runCase + "\t|\t" +
-                            result.getSwaps() + "\t|\t" +
-                            result.getComparisons() + "\t|\t" +
+                    System.out.println(runCase + ";" +
+                            result.getSwaps() + " ;" +
+                            result.getComparisons() + ";" +
                             result.getTime());
-                    System.out.println();
                 }
             }
         }
-
     }
 }

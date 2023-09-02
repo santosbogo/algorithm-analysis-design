@@ -39,28 +39,33 @@ abstract class AbstractSorter<T> implements ObservableSorter{
         }
     }
 
-    int checkPartition(List<T> list, Comparator<T> comparator, int low, int high) {
+    //I WANT TO IMPLEMENT THIS PARTITION BUT I CANT UDERSTAND WHY DOES NOT WORK IN TEAM CITY
+     int NEWpartition(List<T> list, Comparator<T> comparator, int low, int high) {
         int a = low; //Left pointer
-        int b = high; //Right pointer
+        int b = high - 1; //Right pointer
+         //high is the pivot position (last position)
 
         while(a < b){
             //Moving the left pointer to the right until it finds a bigger than the pivot
             while(less(list, a, high, comparator)){
+                notifyBox(a, high);
                 a++;
                 if (a == b) break;
             }
             //Moving the right pointer to the left until it finds a lower than the pivot
             while (!less(list, b, high, comparator)){
-                notifyGreater(a, b);
-                --b;
+                notifyBox(b, high);
+                b--;
                 if (a == b) break;
             }
 
             exch(list, a, b);
+
         }
-        exch(list, a, high); //Move the pivot to the partitioning position
+        exch(list, high, a); //Move the pivot to the partitioning position
         return a; //Partitioning position, the left elements are all less and the right elements are all big
     }
+
     int partition(List<T> list, Comparator<T> comparator, int low, int high) {
         int i = low - 1;
         for (int j = low; j < high; j++) {
@@ -75,31 +80,35 @@ abstract class AbstractSorter<T> implements ObservableSorter{
 
 
 
+// I CAN NOT MAKE THE NOTIFIERS WORK
     void merge(Comparator<T> comparator, List<T> list, List<T> temp, int low, int mid, int high){
         int i = low;
         int j = mid + 1;
 
         for (int k = low; k <= high; k++) {
             temp.set(k, list.get(k));
-            //notifyCopy();
+            notifyCopy(k, k, true);
         }
 
 
         for (int k = low; k <= high; k++) {
             if (i > mid) {
                 list.set(k, temp.get(j++));
-                notifyCopy(i, k, false);
-                notifySwap(i, k);
+                notifyCopy(j-1, k, false);
+                notifySwap(j-1, k);
             } else if (j > high) {
                 list.set(k, temp.get(i++));
-                notifyCopy(i, k, true);
-                notifySwap(i, k);
+                notifyCopy(i-1, k, false);
+                notifySwap(i-1, k);
             } else if (less(temp, j, i, comparator)) {
                 list.set(k, temp.get(j++));
-                notifyCopy(i, k, false);
+                notifyCopy(j-1, k, false);
             } else {
                 list.set(k, temp.get(i++));
-                notifyCopy(i, k, true);
+                notifyCopy(i-1, k, false);
+            }
+            if (i != k && j != k) {
+                notifySwap(i, j);
             }
         }
     }
