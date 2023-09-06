@@ -1,4 +1,4 @@
-package search;
+package anaydis.search;
 
 public class Node<T>{
     public String key;

@@ -1,4 +1,4 @@
-package search;
+package anaydis.search;
 
 import anaydis.search.Map;
 import org.jetbrains.annotations.NotNull;
