@@ -1,9 +1,11 @@
 package anaydis.search;
 
-import anaydis.search.Map;
 import org.jetbrains.annotations.NotNull;
 
+import java.util.ArrayList;
 import java.util.Iterator;
+import java.util.List;
+import java.util.NoSuchElementException;
 
 public class RWayTrieMap<T> implements Map<String, T> {
 
@@ -55,8 +57,41 @@ public class RWayTrieMap<T> implements Map<String, T> {
 
     @Override
     public Iterator keys() {
-        return null;
+        return new RWayIterator();
     }
+    private class RWayIterator implements Iterator<String> {
+        List<String> keysList = new ArrayList<>();
+        private int currentIndex = 0;
+
+        public RWayIterator() {
+            collectKeys(root, "");
+        }
+
+        private void collectKeys(Node<T> node, String prefix) {
+            if (node == null) return;
+            if (node.value != null) {
+                keysList.add(prefix);
+            }
+            for (char c = 0; c < 256; c++) {
+                collectKeys(node.next[c], prefix + c);
+            }
+        }
+
+        @Override
+        public boolean hasNext() {
+            return currentIndex < keysList.size();
+        }
+
+        @Override
+        public String next() {
+            if (!hasNext()) {
+                throw new NoSuchElementException();
+            }
+            return keysList.get(currentIndex++);
+        }
+    }
+
+
 
     //Easy methods already solved
     @Override
@@ -79,5 +114,4 @@ public class RWayTrieMap<T> implements Map<String, T> {
         root = null;;
         size = 0;
     }
-
 }
