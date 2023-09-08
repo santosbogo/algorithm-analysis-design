@@ -67,8 +67,10 @@ public class BinaryTrieMap<T> implements Map<String, T>{
         boolean bit = bitAt(key, nthBit);
 
         if (bit) {
+            if (node.right == null) node.right = new Node<>();
             node.right = put(node.right, key, value, nthBit + 1);
         } else {
+            if (node.left == null) node.left = new Node<>();
             node.left = put(node.left, key, value, nthBit + 1);
         }
 
