@@ -22,23 +22,21 @@ public class BinaryTrieMap<T> implements Map<String, T>{
         return pos < s.length() && (s.charAt(pos) >> (nth % 8) & 1) != 0;
     }
 
-    private Node<T> find (Node<T> node, String key){
-        if (node == null) return null;
-        int n = key.length();
-        for (int i = 0; i < n; i++) {
-            if (bitAt(key, i)) {
-                node = node.right;
-            }
-            else node = node.left;
-            if (node == null) return null;
+    private Node<T> find (Node<T> node, String key, int nthBit){
+        if (node == null || nthBit >= key.length() * 8) {
+            return null; // Key not found or end of key reached
         }
-        return node;
+
+        boolean bit = bitAt(key, nthBit);
+
+        if (bit)return find(node.right, key, nthBit + 1);
+        else    return find(node.left, key, nthBit + 1);
     }
 
     @Override
     public T get(String key) {
         if (key == null) throw new NullPointerException();
-        Node<T> node = find(root, key);
+        Node<T> node = find(root, key, 0);
         return node == null ? null : node.value;
     }
 
