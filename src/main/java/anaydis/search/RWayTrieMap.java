@@ -24,7 +24,10 @@ public class RWayTrieMap<T> implements Map<String, T> {
         Node<T> previous = find(root, key, 0);
         root = put(root, key, value, 0);
 
-        if (previous == null) return null;
+        if (previous == null) {
+            size ++;
+            return null;
+        }
         return previous.value;
     }
     private Node<T> put(Node<T> node, String key, T value, int pos) {
