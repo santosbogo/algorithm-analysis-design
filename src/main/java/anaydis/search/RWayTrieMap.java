@@ -10,7 +10,7 @@ import java.util.NoSuchElementException;
 public class RWayTrieMap<T> implements Map<String, T> {
 
     private int size = 0;
-    private Node root = null;
+    private Node<T> root = null;
 
     private static class Node<T>{
         public T value;
@@ -20,25 +20,25 @@ public class RWayTrieMap<T> implements Map<String, T> {
     @Override
     public T put(String key, T value) {
         if (key == null) throw new NullPointerException();
+
         Node<T> previous = find(root, key, 0);
         root = put(root, key, value, 0);
+
+        if (previous == null) return null;
         return previous.value;
     }
     private Node<T> put(Node<T> node, String key, T value, int pos) {
         // If the node is null, create a new node
         if (node == null) node = new Node<>();
         //If the position has the same length of the key, then we find the node, replace the old value with the new.
-        if (pos == key.length()){
-            node.value = value;
-            return node;
-        }
+        if (pos == key.length()) node.value = value;
         //Now, that we know
         else {
             char c = key.charAt(pos);
             //Here when I use [c] I mean the position of the value of the char C that in ASCII is 0<=c<=256
             node.next[c] = put(node.next[c], key, value, pos + 1);
-            return node;
         }
+        return node;
     }
 
     private Node<T> find(Node<T> node, String key, int pos){
@@ -52,7 +52,7 @@ public class RWayTrieMap<T> implements Map<String, T> {
     public T get(String key) {
         if (key == null) throw new NullPointerException();
         Node<T> node = find(root, key, 0);
-        return node.value;
+        return node == null ? null : node.value;
     }
 
     @Override
