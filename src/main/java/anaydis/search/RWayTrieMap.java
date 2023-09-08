@@ -74,6 +74,7 @@ public class RWayTrieMap<T> implements Map<String, T> {
         private void collectKeys(Node<T> node, String prefix) {
             if (node == null) return;
             if (node.value != null) {
+                //Add to the list of keys the entire key that was collected
                 keysList.add(prefix);
             }
             for (char c = 0; c < 256; c++) {
