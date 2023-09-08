@@ -57,21 +57,14 @@ public class BinaryTrieMap<T> implements Map<String, T>{
         if (node == null) {
             node = new Node<>();
         }
+        // Last position of the key, put the value
+        if (nthBit == key.length() * 8) node.value = value;
 
-        if (nthBit == key.length() * 8) {
-            // Last position of the key, put the value
-            node.value = value;
-            return node;
-        }
+        else {
+            boolean bit = bitAt(key, nthBit);
 
-        boolean bit = bitAt(key, nthBit);
-
-        if (bit) {
-            if (node.right == null) node.right = new Node<>();
-            node.right = put(node.right, key, value, nthBit + 1);
-        } else {
-            if (node.left == null) node.left = new Node<>();
-            node.left = put(node.left, key, value, nthBit + 1);
+            if (bit)node.right = put(node.right, key, value, nthBit + 1);
+            else    node.left = put(node.left, key, value, nthBit + 1);
         }
 
         return node;
