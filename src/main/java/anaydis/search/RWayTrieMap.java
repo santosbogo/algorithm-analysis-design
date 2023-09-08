@@ -21,14 +21,14 @@ public class RWayTrieMap<T> implements Map<String, T> {
     public T put(String key, T value) {
         if (key == null) throw new NullPointerException();
 
-        Node<T> previous = find(root, key, 0);
+        T previous = get(key);
         root = put(root, key, value, 0);
 
         if (previous == null) {
             size ++;
             return null;
         }
-        return previous.value;
+        return previous;
     }
     private Node<T> put(Node<T> node, String key, T value, int pos) {
         // If the node is null, create a new node
@@ -39,6 +39,7 @@ public class RWayTrieMap<T> implements Map<String, T> {
         else {
             char c = key.charAt(pos);
             //Here when I use [c] I mean the position of the value of the char C that in ASCII is 0<=c<=256
+            if (node.next[c] == null) node.next[c] = new Node<>();
             node.next[c] = put(node.next[c], key, value, pos + 1);
         }
         return node;
