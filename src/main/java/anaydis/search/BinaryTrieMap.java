@@ -2,16 +2,13 @@ package anaydis.search;
 
 import org.jetbrains.annotations.NotNull;
 
-import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.List;
-import java.util.NoSuchElementException;
+import java.util.*;
 
 public class BinaryTrieMap<T> implements Map<String, T>{
     Node <T> root = null;
     int size;
 
-    private class Node<T> {
+    private static class Node<T> {
         private String key;
         private T value = null;
         private Node<T> left = null;
@@ -25,9 +22,10 @@ public class BinaryTrieMap<T> implements Map<String, T>{
     }
 
     private boolean bitAt(String s, int nth) {
-        final int pos = nth / 8;
-        return pos < s.length() && (s.charAt(pos) >> (nth % 8) & 1) != 0;
-    }
+        final int position = nth / 8;
+        int bit = (s.charAt(position) >> (nth % 8) & 1);
+        return position < s.length() && bit != 0;
+    } // CHEQUEAR
 
     private int bitAtInt(String s, int nth){
         final int position = nth / 8;
@@ -36,25 +34,21 @@ public class BinaryTrieMap<T> implements Map<String, T>{
     }
 
     private Node<T> split(Node<T> nodeA, Node<T> nodeB, int level){
-        Node<T> result = new Node<>();
+        Node<T> result = new Node<>("", null);
         int A = bitAtInt(nodeA.key, level);
         int B = bitAtInt(nodeB.key, level);
 
-        switch (A * 2 + B){
-            case 0:
-                result.left = split(nodeA, nodeB, level+1);
-                break;
-            case 1:
+        switch (A * 2 + B) {
+            case 0 -> result.left = split(nodeA, nodeB, level + 1);
+            case 1 -> {
                 result.left = nodeA;
                 result.right = nodeB;
-                break;
-            case 2:
+            }
+            case 2 -> {
                 result.left = nodeB;
                 result.right = nodeA;
-                break;
-            case 3:
-                result.right = split(nodeA, nodeB, level +1);
-                break;
+            }
+            case 3 -> result.right = split(nodeA, nodeB, level + 1);
         }
         return result;
     }
@@ -65,12 +59,11 @@ public class BinaryTrieMap<T> implements Map<String, T>{
 
     private Node<T> find(Node<T> node, String key, int level) {
         if (node == null) return null;
-        if (isLeaf(node)) return key == node.key ? node : null;
+        if (isLeaf(node)) return key.equals(node.key) ? node : null;
 
         if (bitAt(key, level)) return find(node.right, key, level + 1);
-        return find(node.left, key, level + 1);
+        else return find(node.left, key, level + 1);
     }
-
 
     @Override
     public T get(String key) {
@@ -99,7 +92,7 @@ public class BinaryTrieMap<T> implements Map<String, T>{
         }
 
         if (isLeaf(node)) {
-            if (node.key == value.key) {
+            if (node.key.equals(value.key)) {
                 //This means it was an existing key
                 node.value = value.value;
                 return node;
