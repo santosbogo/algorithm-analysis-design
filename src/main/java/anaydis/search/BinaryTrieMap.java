@@ -29,10 +29,16 @@ public class BinaryTrieMap<T> implements Map<String, T>{
         return pos < s.length() && (s.charAt(pos) >> (nth % 8) & 1) != 0;
     }
 
+    private int bitAtInt(String s, int nth){
+        final int position = nth / 8;
+        int bit = (s.charAt(position) >> (nth % 8) & 1);
+        return bit;
+    }
+
     private Node<T> split(Node<T> nodeA, Node<T> nodeB, int level){
         Node<T> result = new Node<>();
-        int A = bitAt(nodeA.key, level) ? 1 : 0;
-        int B = bitAt(nodeB.key, level)? 1 : 0;
+        int A = bitAtInt(nodeA.key, level);
+        int B = bitAtInt(nodeB.key, level);
 
         switch (A * 2 + B){
             case 0:
@@ -54,12 +60,12 @@ public class BinaryTrieMap<T> implements Map<String, T>{
     }
 
     private boolean isLeaf(Node<T> node){
-        return (node.right == null && node.left == null);
+        return (node.right == null) && (node.left == null);
     }
 
     private Node<T> find(Node<T> node, String key, int level) {
         if (node == null) return null;
-        if (isLeaf(node)) return key.equals(node.key) ? node : null;
+        if (isLeaf(node)) return key == node.key ? node : null;
 
         if (bitAt(key, level)) return find(node.right, key, level + 1);
         return find(node.left, key, level + 1);
@@ -78,7 +84,7 @@ public class BinaryTrieMap<T> implements Map<String, T>{
         if (key == null) throw new NullPointerException();
 
         T previous = get(key);
-        root = put(root, key, value, 0);
+        root = put(root, new Node<>(key, value), 0);
 
         if (previous == null) {
             size++;
@@ -87,21 +93,22 @@ public class BinaryTrieMap<T> implements Map<String, T>{
         return previous;
     }
 
-    private Node<T> put(Node<T> node, String key, T value, int level) {
+    private Node<T> put(Node<T> node, Node<T> value, int level) {
         if (node == null) {
-            return new Node<>(key, value);
+            return value;
         }
 
-        if (level == key.length() * 8) {
-            // Reached the end of the key, update the value
-            node.value = value;
+        if (isLeaf(node)) {
+            if (node.key == value.key) {
+                //This means it was an existing key
+                node.value = value.value;
+                return node;
+            } else return split(value, node, level);
         } else {
-            boolean bit = bitAt(key, level);
-
-            if (bit) {
-                node.right = put(node.right, key, value, level + 1);
+            if (bitAt(value.key, level)) {
+                node.right = put(node.right, value, level + 1);
             } else {
-                node.left = put(node.left, key, value, level + 1);
+                node.left = put(node.left, value, level + 1);
             }
         }
 
