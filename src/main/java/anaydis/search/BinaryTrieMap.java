@@ -39,16 +39,22 @@ public class BinaryTrieMap<T> implements Map<String, T>{
         int B = bitAtInt(nodeB.key, level);
 
         switch (A * 2 + B) {
-            case 0 -> result.left = split(nodeA, nodeB, level + 1);
-            case 1 -> {
+            case 0:
+                result.left = split(nodeA, nodeB, level + 1);
+                break;
+            case 1:
                 result.left = nodeA;
                 result.right = nodeB;
-            }
-            case 2 -> {
+                break;
+            case 2:
                 result.left = nodeB;
                 result.right = nodeA;
-            }
-            case 3 -> result.right = split(nodeA, nodeB, level + 1);
+                break;
+            case 3:
+                result.right = split(nodeA, nodeB, level + 1);
+                break;
+            default:
+                break;
         }
         return result;
     }
@@ -107,9 +113,6 @@ public class BinaryTrieMap<T> implements Map<String, T>{
 
         return node;
     }
-
-
-
 
     @Override
     public Iterator<String> keys() {
