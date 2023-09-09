@@ -57,14 +57,14 @@ public class BinaryTrieMap<T> implements Map<String, T>{
         return (node.right == null && node.left == null);
     }
 
-    private Node<T> find (Node<T> node, String key, int level) {
-    if (node == null) return null;
-    if (isLeaf(node)) return (key == node.key) ? node : null;
+    private Node<T> find(Node<T> node, String key, int level) {
+        if (node == null) return null;
+        if (isLeaf(node)) return key.equals(node.key) ? node : null;
 
-   if (bitAt(key, level)) return find(node.right, key, level+1);
-   return find(node.left, key, level+1);
-
+        if (bitAt(key, level)) return find(node.right, key, level + 1);
+        return find(node.left, key, level + 1);
     }
+
 
     @Override
     public T get(String key) {
@@ -78,37 +78,38 @@ public class BinaryTrieMap<T> implements Map<String, T>{
         if (key == null) throw new NullPointerException();
 
         T previous = get(key);
-        root = put(root, new Node<T>(key, value), 0);
+        root = put(root, key, value, 0);
 
         if (previous == null) {
-            size ++;
+            size++;
             return null;
         }
         return previous;
     }
-    private Node<T> put(Node<T> node, Node<T> value, int level) {
+
+    private Node<T> put(Node<T> node, String key, T value, int level) {
         if (node == null) {
             size++;
-            return value;
+            return new Node<>(key, value);
         }
 
-        if (isLeaf(node)) {
-            if (node.key.equals(value.key)) {
-                node.value = value.value; // Override key-matching previous node with updated value
-                return node;
-            } else {
-                return split(value, node, level);
-            }
+        if (level == key.length() * 8) {
+            // Reached the end of the key, update the value
+            node.value = value;
         } else {
-            if (bitAt(value.key, level)) {
-                node.right = put(node.right, value, level + 1);
+            boolean bit = bitAt(key, level);
+
+            if (bit) {
+                node.right = put(node.right, key, value, level + 1);
             } else {
-                node.left = put(node.left, value, level + 1);
+                node.left = put(node.left, key, value, level + 1);
             }
-            size++;
-            return node;
         }
+
+        return node;
     }
+
+
 
 
     @Override
