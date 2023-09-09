@@ -116,40 +116,17 @@ public class BinaryTrieMap<T> implements Map<String, T>{
 
     @Override
     public Iterator<String> keys() {
-        return new BSIterator();
+        ArrayList<String> list = new ArrayList<>();
+        inOrderIterator(root, list);
+        return list.iterator();
     }
-    private class BSIterator implements Iterator<String> {
-        private Stack<Node<T>> stack = new Stack<>();
-        private Node<T> current = root;
 
-        public BSIterator() {
-            // Initialize the iterator by pushing nodes onto the stack
-            pushNodes(current);
-        }
-
-        @Override
-        public boolean hasNext() {
-            return !stack.isEmpty();
-        }
-
-        @Override
-        public String next() {
-            if (!hasNext()) {
-                throw new NoSuchElementException();
-            }
-
-            current = stack.pop();
-            pushNodes(current.right); // Push the right subtree onto the stack
-            return current.key;
-        }
-
-        // Helper method to push nodes onto the stack in inorder traversal
-        private void pushNodes(Node<T> node) {
-            while (node != null) {
-                stack.push(node);
-                node = node.left;
-            }
-        }
+    private void inOrderIterator(Node<T> node, ArrayList<String> list) {
+        if (node==null) return;
+        inOrderIterator(node.left, list);
+        if (!Objects.equals(node.key, "")){
+            list.add(node.key);}
+        inOrderIterator(node.right, list);
     }
 
 
