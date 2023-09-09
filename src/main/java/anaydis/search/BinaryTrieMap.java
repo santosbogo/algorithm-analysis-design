@@ -12,9 +12,16 @@ public class BinaryTrieMap<T> implements Map<String, T>{
     int size;
 
     private class Node<T> {
+        private String key;
         private T value = null;
         private Node<T> left = null;
         private Node<T> right = null;
+        Node(String key, T value){
+            this.key = key;
+            this.value = value;
+        }
+        Node(){
+        }
     }
 
     private boolean bitAt(String s, int nth) {
@@ -22,15 +29,41 @@ public class BinaryTrieMap<T> implements Map<String, T>{
         return pos < s.length() && (s.charAt(pos) >> (nth % 8) & 1) != 0;
     }
 
-    private Node<T> find (Node<T> node, String key, int nthBit){
-        if (node == null || nthBit >= key.length() * 8) {
-            return null; // Key not found or end of key reached
+    private Node<T> split(Node<T> nodeA, Node<T> nodeB, int level){
+        Node<T> result = new Node<>();
+        int A = bitAt(nodeA.key, level) ? 1 : 0;
+        int B = bitAt(nodeB.key, level)? 1 : 0;
+
+        switch (A * 2 + B){
+            case 0:
+                result.left = split(nodeA, nodeB, level+1);
+                break;
+            case 1:
+                result.left = nodeA;
+                result.right = nodeB;
+                break;
+            case 2:
+                result.left = nodeB;
+                result.right = nodeA;
+                break;
+            case 3:
+                result.right = split(nodeA, nodeB, level +1);
+                break;
         }
+        return result;
+    }
 
-        boolean bit = bitAt(key, nthBit);
+    private boolean isLeaf(Node<T> node){
+        return (node.right == null && node.left == null);
+    }
 
-        if (bit)return find(node.right, key, nthBit + 1);
-        else    return find(node.left, key, nthBit + 1);
+    private Node<T> find (Node<T> node, String key, int level) {
+    if (node == null) return null;
+    if (isLeaf(node)) return (key == node.key) ? node : null;
+
+   if (bitAt(key, level)) return find(node.right, key, level+1);
+   return find(node.left, key, level+1);
+
     }
 
     @Override
@@ -41,11 +74,11 @@ public class BinaryTrieMap<T> implements Map<String, T>{
     }
 
     @Override
-    public T put(@NotNull String key, T value) {
+    public T put(String key, T value) {
         if (key == null) throw new NullPointerException();
 
         T previous = get(key);
-        root = put(root, key, value, 0);
+        root = put(root, new Node<T>(key, value), 0);
 
         if (previous == null) {
             size ++;
@@ -53,30 +86,30 @@ public class BinaryTrieMap<T> implements Map<String, T>{
         }
         return previous;
     }
-    private Node<T> put(Node<T> node, String key, T value, int nthBit) {
+    private Node<T> put(Node<T> node, Node<T> value, int level) {
         if (node == null) {
-            node = new Node<>();
+            size++;
+            return value;
         }
-        // Last position of the key, put the value
-        if (nthBit == key.length() * 8) {
-            node.value = value;
-        } else {
-            boolean bit = bitAt(key, nthBit);
 
-            if (bit) {
-                node.right = put(node.right, key, value, nthBit + 1);
+        if (isLeaf(node)) {
+            if (node.key.equals(value.key)) {
+                node.value = value.value; // Override key-matching previous node with updated value
+                return node;
             } else {
-                node.left = put(node.left, key, value, nthBit + 1);
+                return split(value, node, level);
             }
-
-            // Set the value for intermediate nodes if necessary
-            if (node.value == null) {
-                node.value = value;
+        } else {
+            if (bitAt(value.key, level)) {
+                node.right = put(node.right, value, level + 1);
+            } else {
+                node.left = put(node.left, value, level + 1);
             }
+            size++;
+            return node;
         }
-
-        return node;
     }
+
 
     @Override
     public Iterator<String> keys() {
