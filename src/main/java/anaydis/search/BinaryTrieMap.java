@@ -119,28 +119,17 @@ public class BinaryTrieMap<T> implements Map<String, T>{
         return new BSIterator();
     }
     private class BSIterator implements Iterator<String> {
-        List<String> keysList = new ArrayList<>();
-        int currentIndex = 0;
+        private Stack<Node<T>> stack = new Stack<>();
+        private Node<T> current = root;
 
         public BSIterator() {
-            collectKeys(root, "");
-        }
-
-        private void collectKeys(Node<T> node, String prefix){
-            if (node == null) return;
-
-            if (node.value != null) {
-                //Add to the list of keys the entire key that was collected
-                keysList.add(prefix);
-            }
-            // Recursively collect keys for left and right subtrees
-            collectKeys(node.left, prefix + "0");
-            collectKeys(node.right, prefix + "1");
+            // Initialize the iterator by pushing nodes onto the stack
+            pushNodes(current);
         }
 
         @Override
         public boolean hasNext() {
-            return currentIndex < keysList.size();
+            return !stack.isEmpty();
         }
 
         @Override
@@ -148,9 +137,21 @@ public class BinaryTrieMap<T> implements Map<String, T>{
             if (!hasNext()) {
                 throw new NoSuchElementException();
             }
-            return keysList.get(currentIndex++);
+
+            current = stack.pop();
+            pushNodes(current.right); // Push the right subtree onto the stack
+            return current.key;
+        }
+
+        // Helper method to push nodes onto the stack in inorder traversal
+        private void pushNodes(Node<T> node) {
+            while (node != null) {
+                stack.push(node);
+                node = node.left;
+            }
         }
     }
+
 
 
     //Easy methods already solved
