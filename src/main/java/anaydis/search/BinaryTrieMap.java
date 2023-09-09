@@ -37,7 +37,7 @@ public class BinaryTrieMap<T> implements Map<String, T>{
     public T get(String key) {
         if (key == null) throw new NullPointerException();
         Node<T> node = find(root, key, 0);
-        return node == null ? null : node.value;
+        return node != null ? node.value : null;
     }
 
     @Override
