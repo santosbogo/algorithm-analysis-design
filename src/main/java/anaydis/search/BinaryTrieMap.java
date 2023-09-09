@@ -89,7 +89,6 @@ public class BinaryTrieMap<T> implements Map<String, T>{
 
     private Node<T> put(Node<T> node, String key, T value, int level) {
         if (node == null) {
-            size++;
             return new Node<>(key, value);
         }
 
