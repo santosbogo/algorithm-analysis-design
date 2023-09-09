@@ -25,7 +25,7 @@ public class BinaryTrieMap<T> implements Map<String, T>{
         final int position = nth / 8;
         int bit = (s.charAt(position) >> (nth % 8) & 1);
         return position < s.length() && bit != 0;
-    } // CHEQUEAR
+    }
 
     private int bitAtInt(String s, int nth){
         final int position = nth / 8;
@@ -129,9 +129,6 @@ public class BinaryTrieMap<T> implements Map<String, T>{
         inOrderIterator(node.right, list);
     }
 
-
-
-    //Easy methods already solved
     @Override
     public void clear() {
         root = null;
