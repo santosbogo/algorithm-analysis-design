@@ -23,4 +23,8 @@ public class Stats {
     public int getSuccesses(){
         return successes;
     }
+
+    public String toString(){
+        return "Successes= " + successes + "Misses= " + misses + "Time= " + time;
+    }
 }

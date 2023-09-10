@@ -10,10 +10,11 @@ import java.io.FileReader;
 import java.io.IOException;
 import java.util.*;
 
-public class Benchmark {
+public class BenchmarkMain {
     public static void main(String[] args) {
         final int[] N = {5000, 50000, 100000, 150000, 200000};
-        final String[] triesNames = {"RWay", "TST", "Binary"};
+        final String[] triesNames = {"RWay", "TST"}; //, "Binary"};
+        List<Iteration> iterations = new ArrayList<>();
 
         //Create a list with the maps i want to try
         List<anaydis.search.Map<String, Integer>> maps = new ArrayList<>();
@@ -21,12 +22,12 @@ public class Benchmark {
         //Initialize the tries
         anaydis.search.Map<String, Integer> RWay = new RWayTrieMap<>();
         anaydis.search.Map<String, Integer> TST = new TSTTrieMap<>();
-        Map<String, Integer> Binary = new BinaryTrieMap<>();
+        //Map<String, Integer> Binary = new BinaryTrieMap<>();
 
         //Add the maps to the list of maps
         maps. add (RWay);
         maps.add (TST);
-        maps.add(Binary);
+        //maps.add(Binary);
 
         Set<String> orderedWords = readAllWords("src/test/resources/books/quijote.txt");
         Set<String> reversedWords = readAllWords("src/test/resources/books/etojiuq.txt");
@@ -41,13 +42,35 @@ public class Benchmark {
             //Now that we now the value, put in each of the tries
             RWay.put(word, value);
             TST.put(word, value);
-            Binary.put(word, value);
+            //Binary.put(word, value);
         }
 
         for (Integer n: N) {
             for (String name : triesNames) {
+                Scene scene = new Scene(n, name);
 
+                long start = System.currentTimeMillis();
+                int misses = 0;
+                int successes = 0;
+
+                //Create an iterable for reversed words
+                Iterator<String> iter = reversedWords.iterator();
+
+                //Look in the trie for the reversed words
+                for (int i = 0; i < n; i++){
+                    if(name.contains(iter.next())) successes++;
+                    else misses++;
+                }
+
+                long time = System.currentTimeMillis() - start;
+                Stats stats = new Stats(time, misses, successes);
+                Iteration iteration = new Iteration(scene, stats);
+                iterations.add(iteration);
             }
+        }
+
+        for (Iteration iteration: iterations){
+            System.out.println(iteration.toString());
         }
 
 

@@ -74,8 +74,9 @@ public class BinaryTrieMap<T> implements Map<String, T>{
     @Override
     public T get(String key) {
         if (key == null) throw new NullPointerException();
+        if (!containsKey(key)) return null;
         Node<T> node = find(root, key, 0);
-        return node != null ? node.value : null;
+        return node.value;
     }
 
     @Override
@@ -147,6 +148,7 @@ public class BinaryTrieMap<T> implements Map<String, T>{
 
     @Override
     public boolean containsKey(@NotNull String key) {
-        return get(key) != null;
+        Node<T> node = find(root, key, 0);
+        return (node != null) && (node.value != null);
     }
 }
