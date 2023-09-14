@@ -17,21 +17,25 @@ public class BinaryTrieMap<T> implements Map<String, T>{
             this.key = key;
             this.value = value;
         }
-        Node(){
-        }
     }
 
     private boolean bitAt(String s, int nth) {
         final int position = nth / 8;
-        int bit = (s.charAt(position) >> (nth % 8) & 1);
-        return position < s.length() && bit != 0;
+        if (position >= s.length()) {
+            return false;
+        }
+        int bit = (s.charAt(position) >> (nth % 8)) & 1;
+        return bit != 0;
     }
 
     private int bitAtInt(String s, int nth){
         final int position = nth / 8;
-        int bit = (s.charAt(position) >> (nth % 8) & 1);
-        return bit;
+        if (position >= s.length()) {
+            return 0;
+        }
+        return (s.charAt(position) >> (nth % 8)) & 1;
     }
+
 
     private Node<T> split(Node<T> nodeA, Node<T> nodeB, int level){
         Node<T> result = new Node<>("", null);
@@ -150,5 +154,9 @@ public class BinaryTrieMap<T> implements Map<String, T>{
     public boolean containsKey(@NotNull String key) {
         Node<T> node = find(root, key, 0);
         return (node != null) && (node.value != null);
+    }
+
+    public String toString(){
+        return "Binary Trie";
     }
 }

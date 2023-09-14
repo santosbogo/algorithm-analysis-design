@@ -13,28 +13,31 @@ import java.util.*;
 public class BenchmarkMain {
     public static void main(String[] args) {
         final int[] N = {5000, 50000, 100000, 150000, 200000};
-        final String[] triesNames = {"RWay", "TST"}; //, "Binary"};
+        final String[] triesNames = {"RWay", "TST", "Binary"};
         List<Iteration> iterations = new ArrayList<>();
 
         //Create a list with the maps i want to try
-        List<anaydis.search.Map<String, Integer>> maps = new ArrayList<>();
+        List<Map<String, Integer>> maps = new ArrayList<>();
 
         //Initialize the tries
         anaydis.search.Map<String, Integer> RWay = new RWayTrieMap<>();
         anaydis.search.Map<String, Integer> TST = new TSTTrieMap<>();
-        //Map<String, Integer> Binary = new BinaryTrieMap<>();
+        Map<String, Integer> Binary = new BinaryTrieMap<>();
 
         //Add the maps to the list of maps
         maps. add (RWay);
         maps.add (TST);
-        //maps.add(Binary);
+        maps.add(Binary);
 
-        Set<String> orderedWords = readAllWords("src/test/resources/books/quijote.txt");
-        Set<String> reversedWords = readAllWords("src/test/resources/books/etojiuq.txt");
+        Set<String> orderedWords = Set.copyOf(readAllWords("src/test/resources/books/quijote.txt"));
+        List<String> reversedWords = readAllWords("src/test/resources/books/etojiuq.txt");
 
         //Put the ordered words in the map
-        for (String word: orderedWords){
+        Iterator<String> orderedIter = orderedWords.iterator();
+        while(orderedIter.hasNext()){
             int value;
+            String word = orderedIter.next();
+
             //If the word already exist in the map, then increment its value
             if(RWay.containsKey(word)) value = RWay.get(word) + 1;
             else value = 1;
@@ -42,12 +45,13 @@ public class BenchmarkMain {
             //Now that we now the value, put in each of the tries
             RWay.put(word, value);
             TST.put(word, value);
-            //Binary.put(word, value);
+            Binary.put(word, value);
         }
 
+
         for (Integer n: N) {
-            for (String name : triesNames) {
-                Scene scene = new Scene(n, name);
+            for (Map<String, Integer> trie : maps) {
+                Scene scene = new Scene(n, trie);
 
                 long start = System.currentTimeMillis();
                 int misses = 0;
@@ -58,7 +62,7 @@ public class BenchmarkMain {
 
                 //Look in the trie for the reversed words
                 for (int i = 0; i < n; i++){
-                    if(name.contains(iter.next())) successes++;
+                    if(trie.containsKey(iter.next())) successes++;
                     else misses++;
                 }
 
@@ -72,13 +76,11 @@ public class BenchmarkMain {
         for (Iteration iteration: iterations){
             System.out.println(iteration.toString());
         }
-
-
     }
 
-    private static Set<String> readAllWords(String path){
+    private static List<String> readAllWords(String path){
 
-        Set<String> words = new HashSet<>();
+        List<String> words = new ArrayList<>();
 
         try (BufferedReader reader = new BufferedReader(new FileReader(path))) {
 
@@ -87,7 +89,7 @@ public class BenchmarkMain {
             while (line != null) {
                 String[] lineWords = line.split(" ");
                 for( String word: lineWords){
-                    words.add(word);
+                    if ((!word.isEmpty()) && (!word.contains("\uFEFF"))) words.add(word);
                 }
                 line = reader.readLine();
             }

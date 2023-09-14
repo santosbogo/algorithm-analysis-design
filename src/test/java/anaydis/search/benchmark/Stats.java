@@ -25,6 +25,6 @@ public class Stats {
     }
 
     public String toString(){
-        return "Successes= " + successes + "Misses= " + misses + "Time= " + time;
+        return "Successes= " + successes + " Misses= " + misses + " Time= " + time;
     }
 }

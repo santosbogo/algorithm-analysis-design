@@ -125,5 +125,7 @@ public class TSTTrieMap<T> implements Map<String, T> {
         }
     }
 
-
+    public String toString(){
+        return "TST Trie";
+    }
 }

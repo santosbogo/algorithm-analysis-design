@@ -82,12 +82,12 @@ public class RWayTrieMap<T> implements Map<String, T> {
             }
         }
 
-        @Override
+       @Override
         public boolean hasNext() {
             return currentIndex < keysList.size();
         }
 
-        @Override
+        //@Override
         public String next() {
             if (!hasNext()) {
                 throw new NoSuchElementException();
@@ -107,7 +107,7 @@ public class RWayTrieMap<T> implements Map<String, T> {
     }
 
     @Override
-    public boolean containsKey(@NotNull String key) {
+    public boolean containsKey(String key) {
         return get(key) != null;
     }
 
@@ -115,5 +115,9 @@ public class RWayTrieMap<T> implements Map<String, T> {
     public void clear() {
         root = null;;
         size = 0;
+    }
+
+    public String toString(){
+        return "RWay Trie";
     }
 }
