@@ -48,7 +48,7 @@ public class BenchmarkMain {
             Binary.put(word, value);
         }
 
-
+        System.out.println("\n\nWorst Cases: All Misses\n\n");
         for (Integer n: N) {
             for (Map<String, Integer> trie : maps) {
                 Scene scene = new Scene(n, trie);
@@ -59,6 +59,42 @@ public class BenchmarkMain {
 
                 //Create an iterable for reversed words
                 Iterator<String> iter = reversedWords.iterator();
+
+                //Look in the trie for the reversed words
+                for (int i = 0; i < n; i++){
+                    if(trie.containsKey(iter.next() + "Ñ")) successes++;
+                    else misses++;
+                }
+
+                long time = System.currentTimeMillis() - start;
+                Stats stats = new Stats(time, misses, successes);
+                Iteration iteration = new Iteration(scene, stats);
+                iterations.add(iteration);
+            }
+        }
+
+        for (Iteration iteration: iterations){
+            System.out.println(iteration.toString());
+        }
+
+        System.out.println("\n\nBest Cases: All Hits\n\n");
+        iterations.clear();
+
+        for (Integer n: N) {
+            for (Map<String, Integer> trie : maps) {
+                Scene scene = new Scene(n, trie);
+
+                //I only have 39111 words in the trie, but i need to see the behavior for 200000 so duplicate elements
+                List<String> words = new ArrayList<>();
+                for (String word: orderedWords){
+                    Collections.addAll(words, word, word, word, word, word, word);
+                }
+                Collections.shuffle(words);
+                Iterator<String> iter = words.iterator();
+
+                long start = System.currentTimeMillis();
+                int misses = 0;
+                int successes = 0;
 
                 //Look in the trie for the reversed words
                 for (int i = 0; i < n; i++){
@@ -76,6 +112,7 @@ public class BenchmarkMain {
         for (Iteration iteration: iterations){
             System.out.println(iteration.toString());
         }
+
     }
 
     private static List<String> readAllWords(String path){
