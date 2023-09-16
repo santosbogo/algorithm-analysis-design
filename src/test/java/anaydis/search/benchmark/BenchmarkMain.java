@@ -29,7 +29,8 @@ public class BenchmarkMain {
         maps.add (TST);
         maps.add(Binary);
 
-        Set<String> orderedWords = Set.copyOf(readAllWords("src/test/resources/books/quijote.txt"));
+        List<String> wordsFromQuijote = readAllWords("src/test/resources/books/quijote.txt");
+        Set<String> orderedWords = new HashSet<>(wordsFromQuijote);
         List<String> reversedWords = readAllWords("src/test/resources/books/etojiuq.txt");
 
         //Put the ordered words in the map
