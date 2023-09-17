@@ -1,7 +1,5 @@
 package anaydis.search;
 
-import org.jetbrains.annotations.NotNull;
-
 import java.util.*;
 
 public class TSTTrieMap<T> implements Map<String, T> {
@@ -36,12 +34,12 @@ public class TSTTrieMap<T> implements Map<String, T> {
     }
 
     private Node<T> find(Node<T> node, String key, int level) {
-        if (root == null) return null;
+        if (node == null) return null;
 
         char c = key.charAt(level);
 
-        if (c > node.c) return find(node.left, key, level);
-        else if (c < node.c) return find(node.right, key, level);
+        if (c < node.c) return find(node.left, key, level);
+        else if (c > node.c) return find(node.right, key, level);
             //Now we found the next char if the key (c == node.c). We need to ask if it is the las char of the key.
             // key.length() - 1 is because when we are at that level means it is the last character of the key, so we want that node
         else if (level < key.length() - 1) return find(node.middle, key, level + 1);
@@ -76,9 +74,7 @@ public class TSTTrieMap<T> implements Map<String, T> {
         if (node == null) {
             node = new Node<>();
             node.c = c;
-            return new Tuple<>(node, null);
         }
-
 
         if (c < node.c) node.left = put(node.left, key, value, level).getNode();
         else if (c > node.c) node.right = put(node.right, key, value, level).getNode();

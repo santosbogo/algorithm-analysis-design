@@ -22,9 +22,6 @@ public class TriesTest {
             rWay.put(wordsIter.next(), value++);
         }
 
-        rWay.put("El", value++);
-
-
         assertThat(rWay.containsKey("monkey")).isTrue();
         assertThat(rWay.containsKey("mon")).isFalse();
 
@@ -32,6 +29,26 @@ public class TriesTest {
         value = 0;
         while (wordsIter.hasNext()){
             assertThat(rWay.get(wordsIter.next())).isEqualTo(value++);
+        }
+    }
+
+    @Test
+    public void TSTTrieMapTest(){
+        TSTTrieMap<Integer> TST = new TSTTrieMap<>();
+
+        Iterator<String> wordsIter = Arrays.stream(keys).iterator();
+        int value = 0;
+        while (wordsIter.hasNext()){
+            TST.put(wordsIter.next(), value++);
+        }
+
+        assertThat(TST.containsKey("monkey")).isTrue();
+        assertThat(TST.containsKey("mon")).isFalse();
+
+        wordsIter = Arrays.stream(keys).iterator();
+        value = 0;
+        while (wordsIter.hasNext()){
+            assertThat(TST.get(wordsIter.next())).isEqualTo(value++);
         }
     }
 
