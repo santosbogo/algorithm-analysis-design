@@ -1,4 +1,4 @@
-package anaydis.sort;
+package anaydis.sandbox.sort;
 
 public class Node<T>{
     Node<T> next;

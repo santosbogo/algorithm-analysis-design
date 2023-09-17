@@ -13,10 +13,10 @@ public class QuickSorterNonRecursive extends AbstractSorter{
 
     @Override
     public <T> void sort(@NotNull Comparator<T> comparator, @NotNull List<T> list) {
-
         Stack<Integer> stack = new Stack<>();
         stack.push(0);
         stack.push(list.size() - 1);
+
         while (!stack.isEmpty()){
 
             int high = stack.pop();
