@@ -80,9 +80,10 @@ public class TSTTrieMap<T> implements Map<String, T> {
         else if (c > node.c) node.right = put(node.right, key, value, level).getNode();
         else if (level < key.length() - 1) node.middle = put(node.middle, key, value, level + 1).getNode();
         else {
-            if (node.value != null) {
-                oldValue = node.value;
-            } else size++;
+            oldValue = node.value;
+            if (oldValue == null) {
+                size++;
+            }
             node.value = value;
         }
 
