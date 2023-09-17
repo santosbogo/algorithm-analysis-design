@@ -40,33 +40,32 @@ abstract class AbstractSorter<T> implements ObservableSorter{
     }
 
     //I WANT TO IMPLEMENT THIS PARTITION BUT I CANT UDERSTAND WHY DOES NOT WORK IN TEAM CITY
-     int NEWpartition(List<T> list, Comparator<T> comparator, int low, int high) {
+     int partition(List<T> list, Comparator<T> comparator, int low, int high) {
         int a = low; //Left pointer
         int b = high - 1; //Right pointer
          //high is the pivot position (last position)
 
-        while(a < b){
+        while(a <= b){
             //Moving the left pointer to the right until it finds a bigger than the pivot
-            while(less(list, a, high, comparator)){
+            while(a <= b && less(list, a, high, comparator)){
                 notifyBox(a, high);
                 a++;
                 if (a == b) break;
             }
             //Moving the right pointer to the left until it finds a lower than the pivot
-            while (!less(list, b, high, comparator)){
+            while (a <= b && !less(list, b, high, comparator)){
                 notifyBox(b, high);
                 b--;
                 if (a == b) break;
             }
-
-            exch(list, a, b);
+            if (a < b) exch(list, a, b);
 
         }
         exch(list, high, a); //Move the pivot to the partitioning position
         return a; //Partitioning position, the left elements are all less and the right elements are all big
     }
 
-    int partition(List<T> list, Comparator<T> comparator, int low, int high) {
+    int Newpartition(List<T> list, Comparator<T> comparator, int low, int high) {
         int i = low - 1;
         for (int j = low; j < high; j++) {
             if (less(list, j, high, comparator)) {

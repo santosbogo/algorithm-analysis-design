@@ -24,6 +24,7 @@ abstract class SorterTest extends AbstractSorterTest {
     @Override protected SorterProvider getSorterProvider() {
         return new SorterProviderSort();
     }
+
     @Test
     public void QuickSorterRandomOrderTest(){
         List<Integer> random = new IntegerDataSetGenerator().createRandom(100);
@@ -65,7 +66,7 @@ abstract class SorterTest extends AbstractSorterTest {
     }
 
     @Test
-    public void HybridSorterRandomRandomOrderTest(){
+    public void HybridSorterRandomOrderTest(){
         List<Integer> random = new IntegerDataSetGenerator().createRandom(100);
 
         //Sort with Java.util that i am sure it works
