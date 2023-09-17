@@ -39,7 +39,6 @@ abstract class AbstractSorter<T> implements ObservableSorter{
         }
     }
 
-    //I WANT TO IMPLEMENT THIS PARTITION BUT I CANT UDERSTAND WHY DOES NOT WORK IN TEAM CITY
      int partition(List<T> list, Comparator<T> comparator, int low, int high) {
         int a = low; //Left pointer
         int b = high - 1; //Right pointer
@@ -50,14 +49,13 @@ abstract class AbstractSorter<T> implements ObservableSorter{
             while(a <= b && less(list, a, high, comparator)){
                 notifyBox(a, high);
                 a++;
-                if (a == b) break;
             }
             //Moving the right pointer to the left until it finds a lower than the pivot
             while (a <= b && !less(list, b, high, comparator)){
                 notifyBox(b, high);
                 b--;
-                if (a == b) break;
             }
+
             if (a < b) exch(list, a, b);
 
         }
@@ -65,21 +63,7 @@ abstract class AbstractSorter<T> implements ObservableSorter{
         return a; //Partitioning position, the left elements are all less and the right elements are all big
     }
 
-    int Newpartition(List<T> list, Comparator<T> comparator, int low, int high) {
-        int i = low - 1;
-        for (int j = low; j < high; j++) {
-            if (less(list, j, high, comparator)) {
-                i++;
-                exch(list, i, j);
-            }
-        }
-        exch(list, i + 1, high);
-        return i + 1; // This value is a position, the left elements are all less and the right elements are all big
-    }
-
-
-
-// I CAN NOT MAKE THE NOTIFIERS WORK
+    // I CAN NOT MAKE THE NOTIFIERS WORK
     void merge(Comparator<T> comparator, List<T> list, List<T> temp, int low, int mid, int high){
         int i = low;
         int j = mid + 1;
