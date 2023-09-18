@@ -45,6 +45,10 @@ public class TriesTest {
         assertThat(TST.containsKey("monkey")).isTrue();
         assertThat(TST.containsKey("mon")).isFalse();
 
+        TST.put("Hola", 3);
+        assertThat(TST.get("Hola")).isEqualTo(3);
+        assertThat(TST.put("Hola", 6)).isEqualTo(3);
+
         wordsIter = Arrays.stream(keys).iterator();
         value = 0;
         while (wordsIter.hasNext()){

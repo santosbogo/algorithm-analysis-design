@@ -6,6 +6,7 @@ public class TSTTrieMap<T> implements Map<String, T> {
 
     Node<T> root = null;
     int size = 0;
+    T oldValue;
 
     public class Node<T> {
         private char c;
@@ -66,26 +67,23 @@ public class TSTTrieMap<T> implements Map<String, T> {
         root = tuple.getNode();
         return tuple.getValue();
     }
-
     private Tuple<T> put(Node<T> node, String key, T value, int level) {
         char c = key.charAt(level);
-        T oldValue = value;
 
         if (node == null) {
             node = new Node<>();
             node.c = c;
-        }else{
-            oldValue = node.value;
         }
 
         if (c < node.c) node.left = put(node.left, key, value, level).getNode();
         else if (c > node.c) node.right = put(node.right, key, value, level).getNode();
         else if (level < key.length() - 1) node.middle = put(node.middle, key, value, level + 1).getNode();
         else {
+            oldValue = node.value;
+            node.value = value;
             if (oldValue == null) {
                 size++;
             }
-            node.value = value;
         }
 
         return new Tuple<>(node, oldValue);
