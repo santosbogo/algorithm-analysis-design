@@ -6,7 +6,7 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
-public class TSTTrieMap <T> implements Map<String, T> {
+public class TSTTrie<T> implements Map<String, T> {
     int size = 0;
     TSTNode<T> root = null;
 

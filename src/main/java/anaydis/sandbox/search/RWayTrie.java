@@ -1,24 +1,19 @@
-package anaydis.search;
+package anaydis.sandbox.search;
 
+import anaydis.search.Map;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
-import java.util.NoSuchElementException;
 
-public class RWayTrieMap<T> implements Map<String, T> {
+public class RWayTrie<T> implements Map<String, T> {
 
-    private int size = 0;
-    private Node<T> root = null;
+    int size = 0;
+    RNode<T> root = null;
     T oldValue;
 
-    private static class Node<T>{
-        public T value;
-        private Node<T>[] next = new Node[256];
-    }
-
-    private Node<T> find(Node<T> node, String key, int level){
+    private RNode<T> find(RNode<T> node, String key, int level){
         if (node == null) return null;
         if (level == key.length()) return node;
         char c = key.charAt(level);
@@ -28,7 +23,7 @@ public class RWayTrieMap<T> implements Map<String, T> {
     @Override
     public T get(String key) {
         if (key == null) throw new NullPointerException();
-        Node<T> node = find(root, key, 0);
+        RNode<T> node = find(root, key, 0);
         return  node != null ? node.value : null;
     }
 
@@ -36,8 +31,8 @@ public class RWayTrieMap<T> implements Map<String, T> {
     public T put(@NotNull String key, T value) {
         return null;
     }
-    private Node<T> put(Node<T> node, String key, T value, int level){
-        if (node == null) node = new Node<>();
+    private RNode<T> put(RNode<T> node, String key, T value, int level){
+        if (node == null) node = new RNode<>();
 
         if (level == key.length()){
             oldValue = node.value;
@@ -49,7 +44,7 @@ public class RWayTrieMap<T> implements Map<String, T> {
         }
 
         char c = key.charAt(level);
-        if(node.next[c] == null) node.next[c] = new Node<>();
+        if(node.next[c] == null) node.next[c] = new RNode<>();
         node.next[c] = put(node.next[c], key, value, level + 1);
         return node;
     }
@@ -66,7 +61,7 @@ public class RWayTrieMap<T> implements Map<String, T> {
         getKeys(root, keys, "");
         return keys.iterator();
     }
-    private void getKeys(Node<T> node, List<String> keys, String prefix){
+    private void getKeys(RNode<T> node, List<String> keys, String prefix){
         if(node == null) return;
 
         if (node.value != null) keys.add(prefix);
@@ -86,9 +81,4 @@ public class RWayTrieMap<T> implements Map<String, T> {
         if (key == null) throw new NullPointerException();
         return get(key) != null;
     }
-
-    public String toString(){
-        return "RWay Trie";
-    }
 }
-
