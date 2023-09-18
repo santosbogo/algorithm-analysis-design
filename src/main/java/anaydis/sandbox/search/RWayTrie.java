@@ -28,8 +28,10 @@ public class RWayTrie<T> implements Map<String, T> {
     }
 
     @Override
-    public T put(@NotNull String key, T value) {
-        return null;
+    public T put(String key, T value) {
+        if (key == null) throw new NullPointerException();
+        root = put(root, key, value, 0);
+        return oldValue;
     }
     private RNode<T> put(RNode<T> node, String key, T value, int level){
         if (node == null) node = new RNode<>();
@@ -67,7 +69,7 @@ public class RWayTrie<T> implements Map<String, T> {
         if (node.value != null) keys.add(prefix);
 
         for(int i = 0; i < 256; i++){
-            getKeys(node.next[i], keys, prefix);
+            getKeys(node.next[i], keys, prefix + (char)i);
         }
     }
 
