@@ -4,6 +4,7 @@ import anaydis.search.Map;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Iterator;
 import java.util.List;
 
@@ -83,4 +84,84 @@ public class RWayTrie<T> implements Map<String, T> {
         if (key == null) throw new NullPointerException();
         return get(key) != null;
     }
+
+
+    public List<String> autocomplete(String pattern){
+        final List<String> keys = new ArrayList<>();
+        autocomplete(root, keys, pattern, "", 0);
+        return keys;
+    }
+    private void autocomplete(RNode<T> node, List<String> keys, String pattern, String match, int level){
+        if(node == null) return;
+
+        if(level < pattern.length()){
+            char c = pattern.charAt(level);
+            autocomplete(node.next[c], keys, pattern, match + c, level + 1);
+        }
+        else{
+            if(node.value != null) keys.add(match);
+            for (char c = 0; c < 256; c++)
+                autocomplete(node.next[c], keys, pattern, match + c, level + 1);
+        }
+    }
+
+//    public String longestPrefixOf(String pattern){
+//        return longestPrefixOf(root, pattern, "", "", 0);
+//    }
+//    private String longestPrefixOf(TSTNode<T> node, String pattern, String match, String lastKey, int level){
+//        if (node == null) return lastKey;
+//
+//        char c = pattern.charAt(level);
+//
+//        if(c < node.c) return longestPrefixOf(node.left, pattern, match, lastKey, level);
+//        else if (c > node.c) return longestPrefixOf(node.right, pattern, match, lastKey, level);
+//        else{
+//            if (node.value != null) lastKey = match + node.c;
+//            if (level < pattern.length() - 1)
+//                return longestPrefixOf(node.middle, pattern, match + node.c, lastKey, level + 1);
+//        }
+//        return lastKey;
+//    }
+
+    public static void main(String[] args) {
+
+        //AUTOCOMPLETE
+        System.out.println("\nAutocomplete:\nExpected: lupani, lupin");
+        RWayTrie<Integer> map = new RWayTrie<>();
+        final String[] keys = {"lucas", "lupani", "lupin", "luz", "luana", "tractor", "laura"};
+        Iterator<String> wordsIter = Arrays.stream(keys).iterator();
+        int value = 0;
+        while (wordsIter.hasNext()){
+            map.put(wordsIter.next(), value++);
+        }
+        System.out.println(map.autocomplete("lup"));
+
+//        //LONGEST PREFIX OF
+//        System.out.println("\nLongest prefix of:\nExpected: she, shells");
+//        map = new TSTTrie<>();
+//        final String[] keys2 = {"she", "sells", "sea", "shells", "by", "the", "sea", "shore"};
+//        wordsIter = Arrays.stream(keys2).iterator();
+//        value = 0;
+//        while (wordsIter.hasNext()){
+//            map.put(wordsIter.next(), value++);
+//        }
+//        System.out.println(map.longestPrefixOf("shell"));
+//        System.out.println(map.longestPrefixOf("shellsort"));
+//
+//        //KEYS THAT MATCH
+//        System.out.println("\nKeys that match:\nExpected: she, the");
+//        map = new TSTTrie<>();
+//        final String[] keys3 = {"she", "sells", "sea", "shells", "by", "the", "sea", "shore"};
+//        wordsIter = Arrays.stream(keys3).iterator();
+//        value = 0;
+//        while (wordsIter.hasNext()){
+//            map.put(wordsIter.next(), value++);
+//        }
+//        System.out.println(map.wildcard(".he") + "\nExpected: sea, she");
+//        System.out.println(map.wildcard("s..") + "\nExpected: sells, shore");
+//        System.out.println(map.wildcard("....."));
+//
+
+    }
+
 }

@@ -1,13 +1,13 @@
 package anaydis.sandbox.sort;
 
 import java.util.Comparator;
+import java.util.Random;
 
 public class SelectionLinkedListWithMax<T>{
-    public Node<T> sort(Node<T> list, Comparator<T> comparator){
 
+    public Node<T> sort(Node<T> list, Comparator<T> comparator){
         Node<T> sortedList = null;
         Node<T> max;
-
         while(list != null){
             max = findMax(list, comparator);
             list = remove(list, max);
@@ -15,29 +15,25 @@ public class SelectionLinkedListWithMax<T>{
             sortedList = max;
 
         }
-
         return sortedList;
     }
-
     private Node<T> findMax(Node<T> node, Comparator<T> comparator){
-
         Node<T> max = node;
 
-        while (node != null) {
-            if (comparator.compare(node.value, max.value) > 0) max = node;
+        while(node != null){
+            if(comparator.compare(node.value, max.value) > 0){
+                max = node;
+            }
             node = node.next;
         }
-
         return max;
     }
-
     private Node<T> remove(Node<T> list, Node<T> node){
         if (list == null) return null;
         if (list == node) return list.next;
         list.next = remove(list.next, node);
         return list;
     }
-
 
     public static void main(String[] args) {
         Comparator<Integer> comparator = Comparator.naturalOrder();
@@ -59,5 +55,7 @@ public class SelectionLinkedListWithMax<T>{
             System.out.print(current.value + " ");
             current = current.next;
         }
+
+        Random rand = new Random();
     }
 }
