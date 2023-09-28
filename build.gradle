@@ -31,7 +31,7 @@ repositories {
 dependencies {
     /* Compile scope */
     implementation 'ar.edu.austral.fi.anaydis:anaydis-anim:1.3.13'
-    implementation 'ar.edu.austral.fi.anaydis:anaydis-base:1.3.13'
+    implementation 'ar.edu.austral.fi.anaydis:anaydis-base:1.3.14'
     implementation 'org.jetbrains:annotations:22.0.0'
 
     /* Test scope */
