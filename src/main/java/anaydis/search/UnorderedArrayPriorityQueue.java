@@ -5,6 +5,7 @@ import org.jetbrains.annotations.NotNull;
 import java.util.Arrays;
 import java.util.Comparator;
 import java.util.Iterator;
+import java.util.NoSuchElementException;
 
 public class UnorderedArrayPriorityQueue<T> implements PriorityQueue<T>{
     private T[] array;
@@ -43,6 +44,8 @@ public class UnorderedArrayPriorityQueue<T> implements PriorityQueue<T>{
 
     @Override
     public T pop() {
+        if (size == 0) throw new NoSuchElementException();
+
         T max = array[0];
         int i;
         for(i = 1; i < size; i++){
@@ -60,6 +63,8 @@ public class UnorderedArrayPriorityQueue<T> implements PriorityQueue<T>{
 
     @Override
     public T peek() {
+        if (size == 0) throw new NoSuchElementException();
+
         T max = array[0];
         int i;
         for(i = 1; i < size; i++){
