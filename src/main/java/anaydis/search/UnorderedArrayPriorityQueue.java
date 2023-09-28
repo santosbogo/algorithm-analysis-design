@@ -2,6 +2,7 @@ package anaydis.search;
 
 import org.jetbrains.annotations.NotNull;
 
+import java.util.Arrays;
 import java.util.Comparator;
 import java.util.Iterator;
 
@@ -76,38 +77,8 @@ public class UnorderedArrayPriorityQueue<T> implements PriorityQueue<T>{
     @NotNull
     @Override
     public Iterator<T> iterator() {
-        return new UnorderedArrayPriorityQueueIterator();
-    }
-
-    private class UnorderedArrayPriorityQueueIterator implements Iterator<T>{
-
         T[] iterArray = array;
-        int iterSize = size;
-
-        @Override
-        public boolean hasNext() {
-            T max = iterArray[0];
-            int i;
-            for(i = 1; i < iterSize; i++){
-                if(comparator.compare(iterArray[i], max) > 0)
-                    max = iterArray[i];
-            }
-
-            return  max != null;
-        }
-
-        @Override
-        public T next() {
-            T max = iterArray[0];
-            int i;
-            for(i = 1; i < iterSize; i++){
-                if(comparator.compare(iterArray[i], max) > 0)
-                    max = iterArray[i];
-            }
-            iterArray[i] = null;
-            iterSize--;
-
-            return max;
-        }
+        Arrays.sort(iterArray, comparator.reversed());
+        return Arrays.stream(iterArray).iterator();
     }
 }
