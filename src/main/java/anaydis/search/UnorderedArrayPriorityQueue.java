@@ -7,56 +7,53 @@ import java.util.Comparator;
 import java.util.Iterator;
 import java.util.NoSuchElementException;
 
-public class UnorderedArrayPriorityQueue<T> implements PriorityQueue<T>{
+public class UnorderedArrayPriorityQueue<T> implements PriorityQueue<T> {
     private T[] array;
     private int size = 0;
-    private Comparator<T> comparator;
+    private final Comparator<T> comparator;
 
-    public UnorderedArrayPriorityQueue(Comparator<T> comparator){
+    public UnorderedArrayPriorityQueue(Comparator<T> comparator) {
         this.comparator = comparator;
-        this.array = ((T[]) new Object[5]);
+        this.array = (T[]) new Object[5];
     }
 
-    public UnorderedArrayPriorityQueue(Comparator<T> comparator, int initialCapacity){
+    public UnorderedArrayPriorityQueue(Comparator<T> comparator, int initialCapacity) {
         this.comparator = comparator;
-        this.array = ((T[]) new Object[initialCapacity]);
+        this.array = (T[]) new Object[initialCapacity];
     }
 
-
-    private void resize(int newsize){
-        T[] temp = (T[]) new Object[newsize];
-        int index = 0;
-        for(T element: array)
-            if(element != null)
-                temp[index++] = element;
-
+    private void resize(int newSize) {
+        T[] temp = (T[]) new Object[newSize];
+        System.arraycopy(array, 0, temp, 0, size);
         array = temp;
     }
 
     @Override
     public void insert(T key) {
-        array[size] = key;
-        size++;
-
-        if(size == array.length)
-            resize(size*2);
+        if (size == array.length) {
+            resize(size * 2);
+        }
+        array[size++] = key;
     }
 
     @Override
     public T pop() {
         if (size == 0) throw new NoSuchElementException();
 
-        T max = array[0];
-        int i;
-        for(i = 1; i < size; i++){
-            if(comparator.compare(array[i], max) > 0)
-                max = array[i];
+        int maxIndex = 0;
+        for (int i = 1; i < size; i++) {
+            if (comparator.compare(array[i], array[maxIndex]) > 0) {
+                maxIndex = i;
+            }
         }
-        array[i] = null;
+        T max = array[maxIndex];
+        array[maxIndex] = array[size - 1];
+        array[size - 1] = null;
         size--;
 
-        if (0.25*size <= array.length)
-            resize(size/2);
+        if (0.25 * size <= array.length && array.length > 5) {
+            resize(size / 2);
+        }
 
         return max;
     }
@@ -66,10 +63,10 @@ public class UnorderedArrayPriorityQueue<T> implements PriorityQueue<T>{
         if (size == 0) throw new NoSuchElementException();
 
         T max = array[0];
-        int i;
-        for(i = 1; i < size; i++){
-            if(comparator.compare(array[i], max) > 0)
+        for (int i = 1; i < size; i++) {
+            if (comparator.compare(array[i], max) > 0) {
                 max = array[i];
+            }
         }
         return max;
     }
@@ -82,7 +79,7 @@ public class UnorderedArrayPriorityQueue<T> implements PriorityQueue<T>{
     @NotNull
     @Override
     public Iterator<T> iterator() {
-        T[] iterArray = array;
+        T[] iterArray = Arrays.copyOf(array, size);
         Arrays.sort(iterArray, comparator.reversed());
         return Arrays.stream(iterArray).iterator();
     }

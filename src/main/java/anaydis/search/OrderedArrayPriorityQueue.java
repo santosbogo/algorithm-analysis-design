@@ -7,52 +7,59 @@ import java.util.Comparator;
 import java.util.Iterator;
 import java.util.NoSuchElementException;
 
-public class OrderedArrayPriorityQueue<T> implements PriorityQueue<T>{
+public class OrderedArrayPriorityQueue<T> implements PriorityQueue<T> {
     private T[] array;
     private int size = 0;
-    private Comparator<T> comparator;
+    private final Comparator<T> comparator;
 
-    public OrderedArrayPriorityQueue(Comparator<T> comparator){
+    public OrderedArrayPriorityQueue(Comparator<T> comparator) {
         this.comparator = comparator;
-        this.array = ((T[]) new Object[5]);
+        this.array = (T[]) new Object[5];
     }
 
-    public OrderedArrayPriorityQueue(Comparator<T> comparator, int initialCapacity){
+    public OrderedArrayPriorityQueue(Comparator<T> comparator, int initialCapacity) {
         this.comparator = comparator;
-        this.array = ((T[]) new Object[initialCapacity]);
+        this.array = (T[]) new Object[initialCapacity];
     }
 
-    private void resize(int newsize){
-        T[] temp = (T[]) new Object[newsize];
-        int index = 0;
-        for(T element: array)
-            if(element != null)
-                temp[index++] = element;
-
+    private void resize(int newSize) {
+        T[] temp = (T[]) new Object[newSize];
+        System.arraycopy(array, 0, temp, 0, size);
         array = temp;
+    }
+
+    private void ensureCapacity() {
+        if (size == array.length) {
+            resize(size * 2);
+        }
     }
 
     @Override
     public void insert(T key) {
         if (key == null) throw new NullPointerException();
 
-        array[size] = key;
-        Arrays.sort(array, comparator);
+        ensureCapacity();
 
-        if(size == array.length)
-            resize(size*2);
+        int i = size - 1;
+        while (i >= 0 && comparator.compare(array[i], key) > 0) {
+            array[i + 1] = array[i];
+            i--;
+        }
+        array[i + 1] = key;
+        size++;
     }
 
     @Override
     public T pop() {
         if (size == 0) throw new NoSuchElementException();
 
-        T temp = array[size];
-        array[size] = null;
+        T temp = array[size - 1];
+        array[size - 1] = null;
         size--;
 
-        if (0.25*size <= array.length)
-            resize(size/2);
+        if (0.25 * size <= array.length && array.length > 5) {
+            resize(size / 2);
+        }
 
         return temp;
     }
@@ -60,7 +67,7 @@ public class OrderedArrayPriorityQueue<T> implements PriorityQueue<T>{
     @Override
     public T peek() {
         if (size == 0) throw new NoSuchElementException();
-        return array[size];
+        return array[size - 1];
     }
 
     @Override
@@ -71,7 +78,7 @@ public class OrderedArrayPriorityQueue<T> implements PriorityQueue<T>{
     @NotNull
     @Override
     public Iterator<T> iterator() {
-        T[] iterArray = array;
+        T[] iterArray = Arrays.copyOf(array, size);
         Arrays.sort(iterArray, comparator.reversed());
         return Arrays.stream(iterArray).iterator();
     }
