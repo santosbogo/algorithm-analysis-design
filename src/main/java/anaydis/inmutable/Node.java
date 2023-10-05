@@ -25,6 +25,7 @@ public class Node<T> implements List<T> {
 
     @Override
     public boolean isEmpty() {
+        //This is allways false because if we are in an instance of Node it means list is not empty
         return false;
     }
 
@@ -33,10 +34,12 @@ public class Node<T> implements List<T> {
     public List<T> reverse() {
         List<T> result = (List<T>) NIL;
         List<T> current = this;
+
         while (!current.isEmpty()) {
             result = List.cons(current.head(), result);
             current = current.tail();
         }
+
         return result;
     }
 }
