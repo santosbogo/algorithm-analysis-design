@@ -1,7 +1,5 @@
-package anaydis.inmutable;
+package anaydis.immutable;
 
-import anaydis.immutable.List;
-import anaydis.immutable.Queue;
 import org.jetbrains.annotations.NotNull;
 
 public class BankersQueue<T> implements Queue<T> {
