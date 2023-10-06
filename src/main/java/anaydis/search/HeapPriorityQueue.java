@@ -3,14 +3,17 @@ package anaydis.search;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.Iterator;
 import java.util.NoSuchElementException;
 
-public class HeapPriorityQueue<T extends Comparable<T>> implements PriorityQueue<T> {
+public class HeapPriorityQueue<T> implements PriorityQueue<T> {
     private final ArrayList<T> heap;
+    private final Comparator<T> comparator;
 
-    public HeapPriorityQueue() {
+    public HeapPriorityQueue(Comparator<T> comparator) {
         this.heap = new ArrayList<>();
+        this.comparator = comparator;
     }
 
     @Override
@@ -69,7 +72,7 @@ public class HeapPriorityQueue<T extends Comparable<T>> implements PriorityQueue
     }
 
     private boolean less(int i, int j) {
-        return heap.get(i).compareTo(heap.get(j)) < 0;
+        return comparator.compare(heap.get(i), heap.get(j)) < 0;
     }
 
     private void swap(int i, int j) {
