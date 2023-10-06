@@ -93,8 +93,7 @@ public class BinaryTree<K, V> implements Map<K, V>{
 
     @Override
     public Iterator<K> keys() {
-        Queue<K> keys = new ArrayDeque<>() {
-        };
+        Queue<K> keys = new ArrayDeque<K>();
         inOrder(root, keys);
         return keys.iterator();
     }
