@@ -58,7 +58,7 @@ public class OrderedArrayPriorityQueue<T> implements PriorityQueue<T> {
         size--;
 
         if (0.25 * size <= array.length && array.length > 5) {
-            resize(size / 2);
+            resize(Math.max(1, size / 2));
         }
 
         return temp;
