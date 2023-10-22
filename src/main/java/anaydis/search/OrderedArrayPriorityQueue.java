@@ -24,9 +24,10 @@ public class OrderedArrayPriorityQueue<T> implements PriorityQueue<T> {
 
     private void resize(int newSize) {
         T[] temp = (T[]) new Object[newSize];
-        System.arraycopy(array, 0, temp, 0, size);
+        System.arraycopy(array, 0, temp, 0, Math.min(size, newSize));
         array = temp;
     }
+
 
     private void ensureCapacity() {
         if (size == array.length) {
