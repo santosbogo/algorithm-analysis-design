@@ -15,7 +15,7 @@ import java.util.*;
 public class Huffman implements Compressor{
     @Override
     public void encode(@NotNull InputStream input, @NotNull OutputStream output) throws IOException {
-        List<Character> chars = inputToString(input);
+        List<Integer> chars = inputToString(input);
         HashMap<Character, Integer> concurrenceMap = concurrenceMap(chars);
         PriorityQueue<Node> table = generateHuffmanTree(concurrenceMap);
         Map<Integer, Bits> symbolTable = createSymbolTable(table);
@@ -47,26 +47,27 @@ public class Huffman implements Compressor{
 
     }
 
-    private List<Character> inputToString(InputStream input) throws IOException {
-        List<Character> chars = new ArrayList<>();
+    private List<Integer> inputToString(InputStream input) throws IOException {
+        List<Integer> chars = new ArrayList<>();
         int current = input.read();
 
         while (current != -1){
-            chars.add((char) current);
+            chars.add(current);
             current = input.read();
         }
 
         return chars;
     }
 
-    private HashMap<Character, Integer> concurrenceMap(List<Character> chars){
+    private HashMap<Character, Integer> concurrenceMap(List<Integer> chars){
         HashMap<Character, Integer> concurrenceMap = new HashMap<>();
-
-        for (char c: chars)
+        for (int i : chars) {
+            char c = (char) i;
             if (concurrenceMap.containsKey(c))
                 concurrenceMap.put(c, concurrenceMap.get(c) + 1);
             else
                 concurrenceMap.put(c, 1);
+        }
 
         return concurrenceMap;
     }
