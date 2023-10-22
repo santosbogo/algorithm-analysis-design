@@ -12,8 +12,6 @@ import java.io.OutputStream;
 import java.nio.ByteBuffer;
 import java.util.*;
 
-// [ Node class ... (remains unchanged from your original code) ]
-
 public class Huffman implements Compressor {
 
     @Override
