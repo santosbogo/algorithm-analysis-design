@@ -2,15 +2,14 @@ package anaydis.compression;
 
 import anaydis.bit.Bits;
 import java.util.Map;
-
 public class Node implements Comparable<Node> {
-    public final char character;
-    public final int value;
-    public final Node left;
-    public final Node right;
+    public Character character; // The character this node represents (null for internal nodes)
+    public int value; // The frequency of the character (or combined frequencies for internal nodes)
+    public Node left;  // Left child
+    public Node right; // Right child
 
     // Constructor for leaf nodes
-    public Node(char character, int value) {
+    public Node(Character character, int value) {
         this.character = character;
         this.value = value;
         this.left = null;
@@ -18,33 +17,40 @@ public class Node implements Comparable<Node> {
     }
 
     // Constructor for internal nodes
-    public Node(Node left, Node right, int value) {
-        this.character = '\0';  // Null character for non-leaf nodes
-        this.value = value;
+    public Node(Node left, Node right, int combinedValue) {
+        this.character = null; // Internal nodes don't have a character
         this.left = left;
         this.right = right;
+        this.value = combinedValue; // The sum of the children's frequencies
     }
 
+    // Check if this node is a leaf (i.e., has no children)
     public boolean isLeaf() {
         return left == null && right == null;
     }
 
-    @Override
-    public int compareTo(Node other) {
-        return Integer.compare(this.value, other.value);
-    }
-
-    public void collect(Map<Integer, Bits> table, Bits prefix) {
+    // Used to build the symbol table recursively
+    public void collect(Map<Integer, Bits> map, Bits prefix) {
         if (isLeaf()) {
-            table.put((int) character, prefix);
+            map.put((int) character, prefix);
         } else {
-            Bits leftPrefix = prefix.copy();
-            leftPrefix.add(false);
-            left.collect(table, leftPrefix);
-
-            Bits rightPrefix = prefix.copy();
-            rightPrefix.add(true);
-            right.collect(table, rightPrefix);
+            if (left != null) {
+                Bits leftPrefix = prefix.copy();
+                leftPrefix.add(false);
+                left.collect(map, leftPrefix);
+            }
+            if (right != null) {
+                Bits rightPrefix = prefix.copy();
+                rightPrefix.add(true);
+                right.collect(map, rightPrefix);
+            }
         }
     }
+
+
+    @Override
+    public int compareTo(Node other) {
+        return Integer.compare(this.value, other.value); // Compare based on frequencies
+    }
 }
+

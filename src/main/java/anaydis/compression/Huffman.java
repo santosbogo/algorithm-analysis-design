@@ -15,9 +15,12 @@ import java.util.*;
 public class Huffman implements Compressor{
     @Override
     public void encode(@NotNull InputStream input, @NotNull OutputStream output) throws IOException {
-        List<Integer> chars = inputToString(input);
-        HashMap<Character, Integer> concurrenceMap = concurrenceMap(chars);
+        List<Integer> text = inputToString(input);
+
+        HashMap<Character, Integer> concurrenceMap = concurrenceMap(text);
+
         PriorityQueue<Node> table = generateHuffmanTree(concurrenceMap);
+
         Map<Integer, Bits> symbolTable = createSymbolTable(table);
 
         //Write the size of the symbol table
@@ -25,43 +28,45 @@ public class Huffman implements Compressor{
 
         //Write the symbol table
         for (final Map.Entry<Integer, Bits> current : symbolTable.entrySet()) {
-            final Integer character = current.getKey();
+            Integer character = current.getKey();
             output.write(character);
-            final Bits bits = current.getValue();
+            Bits bits = current.getValue();
             bits.writeInto(output);
         }
 
         // Write the size of the message
-        byte[] size = ByteBuffer.allocate(4).putInt(chars.size()).array();
+        byte[] size = ByteBuffer.allocate(4).putInt(text.size()).array();
         for (byte byteLength : size) {
             output.write(byteLength);
         }
 
         // Write the message
-        final BitsOutputStream contenido = new BitsOutputStream();
-        for (int character : chars) {
-            final Bits code = symbolTable.get(character);
-            contenido.write(code);
+        BitsOutputStream content = new BitsOutputStream();
+        for (int character : text) {
+            Bits code = symbolTable.get(character);
+            content.write(code);
         }
-        output.write(contenido.toByteArray());
+
+        output.write(content.toByteArray());
 
     }
 
     private List<Integer> inputToString(InputStream input) throws IOException {
-        List<Integer> chars = new ArrayList<>();
+        List<Integer> text = new ArrayList<>();
         int current = input.read();
 
         while (current != -1){
-            chars.add(current);
+            text.add(current);
             current = input.read();
         }
 
-        return chars;
+        return text;
     }
 
-    private HashMap<Character, Integer> concurrenceMap(List<Integer> chars){
+    private HashMap<Character, Integer> concurrenceMap(List<Integer> text){
         HashMap<Character, Integer> concurrenceMap = new HashMap<>();
-        for (int i : chars) {
+
+        for (int i : text) {
             char c = (char) i;
             if (concurrenceMap.containsKey(c))
                 concurrenceMap.put(c, concurrenceMap.get(c) + 1);
@@ -90,7 +95,6 @@ public class Huffman implements Compressor{
         return table;
     }
 
-
     private Map<Integer, Bits> createSymbolTable(PriorityQueue<Node> table) {
         //No symbols
         if (table.isEmpty()) return Collections.emptyMap();
@@ -99,8 +103,8 @@ public class Huffman implements Compressor{
         if (table.peek().isLeaf()) return Collections.singletonMap(table.pop().value, new Bits().add(false));
 
         //Many symbols
-        final Node root = table.pop();
-        final Map<Integer, Bits> result = new LinkedHashMap<>();
+        Node root = table.pop();
+        Map<Integer, Bits> result = new LinkedHashMap<>();
         root.collect(result, new Bits());
 
         return result;
@@ -113,25 +117,29 @@ public class Huffman implements Compressor{
         // Read Message Size
         byte[] sizeBytes = new byte[4];
         input.read(sizeBytes);
-        int total = ByteBuffer.wrap(sizeBytes).getInt();
+        int messageSize = ByteBuffer.wrap(sizeBytes).getInt();
 
         // Decode Message
-        Bits currentBits = new Bits();
-        for (int i = 0; i < total; i++) {
+        int pos = 0;
+        int current = -1;
+        for (int i = 0; i < messageSize; i++) {
             Integer character = null;
+            final Bits bits = new Bits();
             while (character == null) {
-                currentBits.add(bitAt(input.read(), 7)); // Asumiendo que lees un bit a la vez.
-                character = symbolTable.get(currentBits);
+                pos = pos % 8;
+                if (pos == 0) current = input.read();
+                bits.add(bitAt(current, pos++));
+                character = symbolTable.get(bits);
             }
             output.write(character);
         }
     }
 
     private Map<Bits, Integer> readSymbolTable(InputStream input) throws IOException {
-        int symbols = input.read();
+        int stSize = input.read();
         Map<Bits, Integer> symbolTable = new HashMap<>();
 
-        for (int i = 0; i < symbols; i++) {
+        for (int i = 0; i < stSize; i++) {
             int character = input.read();
             Bits bits = readBits(input);
             symbolTable.put(bits, character);
@@ -142,16 +150,12 @@ public class Huffman implements Compressor{
 
     private Bits readBits(InputStream input) throws IOException {
         int length = input.read();
-        byte[] bytes = new byte[(length + 7) / 8];
+        byte[] bytes = new byte[(length - 1 )/ Byte.SIZE + 1];
         input.read(bytes);
         Bits bits = new Bits();
 
-        for (int i = 0; i < length; i++) {
-            if (bitAt(bytes[i / 8], i % 8)) {
-                bits.add(true);
-            } else {
-                bits.add(false);
-            }
+        for (int bit = 0; bit < length; bit++) {
+            bits.add(bitAt(bytes, bit));
         }
 
         return bits;
