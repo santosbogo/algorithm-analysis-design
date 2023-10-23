@@ -70,7 +70,7 @@ public class Huffman implements Compressor {
         while (table.size() != 1) {
             Node left = table.pop();
             Node right = table.pop();
-            Node node = new Node(left, right, left.value + right.value);
+            Node node = new Node(left, right);
             table.insert(node);
         }
 
@@ -82,7 +82,7 @@ public class Huffman implements Compressor {
         if (table.isEmpty()) return Collections.emptyMap();
 
         // Just one symbol
-        if (table.peek().isLeaf()) return Collections.singletonMap(table.pop().value, new Bits().add(false));
+        if (table.peek().isLeaf()) return Collections.singletonMap(table.pop().frequency, new Bits().add(false));
 
         // Many symbols
         Node root = table.pop();
@@ -143,9 +143,9 @@ public class Huffman implements Compressor {
         return bits;
     }
 
-    public static boolean bitAt(int value, int position) {
+    public static boolean bitAt(int frequency, int position) {
         int mask = 1 << (7 - position);
-        return (value & mask) != 0;
+        return (frequency & mask) != 0;
     }
 
     private boolean bitAt(byte[] bytes, int nth) {
@@ -153,3 +153,4 @@ public class Huffman implements Compressor {
         return pos < bytes.length && (bytes[pos] >> ((8 * (pos + 1) - (nth + 1)) % 8) & 1) != 0;
     }
 }
+
