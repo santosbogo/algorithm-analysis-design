@@ -12,8 +12,6 @@ import java.io.OutputStream;
 import java.nio.ByteBuffer;
 import java.util.*;
 
-// [ Node class ... (remains unchanged from your original code) ]
-
 public class Huffman implements Compressor {
 
     @Override
@@ -121,7 +119,7 @@ public class Huffman implements Compressor {
 
     private Map<Bits, Integer> readSymbolTable(InputStream input) throws IOException {
         int stSize = input.read();
-        Map<Bits, Integer> symbolTable = new TreeMap<>(Huffman::compareBits);
+        Map<Bits, Integer> symbolTable = new HashMap<>();
 
         for (int i = 0; i < stSize; i++) {
             int character = input.read();
@@ -143,12 +141,6 @@ public class Huffman implements Compressor {
         }
 
         return bits;
-    }
-
-    private static <T> int compareBits(T bit1, T bit2) {
-        String bits1 = bit1.toString();
-        String bits2 = bit2.toString();
-        return bits1.compareTo(bits2);
     }
 
     public static boolean bitAt(int value, int position) {
