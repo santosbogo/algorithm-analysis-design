@@ -6,9 +6,7 @@ import anaydis.search.OrderedArrayPriorityQueue;
 import anaydis.search.PriorityQueue;
 import org.jetbrains.annotations.NotNull;
 
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStream;
+import java.io.*;
 import java.nio.ByteBuffer;
 import java.util.*;
 
@@ -16,14 +14,15 @@ public class Huffman implements Compressor {
 
     @Override
     public void encode(@NotNull InputStream input, @NotNull OutputStream output) throws IOException {
-        HashMap<Character, Integer> concurrenceMap = concurrenceMap(input);
+        byte[] inputData = captureInput(input);
+        HashMap<Character, Integer> concurrenceMap = concurrenceMap(inputData);
 
         PriorityQueue<Node> table = generateHuffmanTree(concurrenceMap);
 
         Map<Integer, Bits> symbolTable = createSymbolTable(table);
 
-        // Write the size of the symbol table
-        output.write(symbolTable.size());
+        // Write the size of the symbol table as an integer
+        output.write(ByteBuffer.allocate(4).putInt(symbolTable.size()).array());
 
         // Write the symbol table
         for (final Map.Entry<Integer, Bits> current : symbolTable.entrySet()) {
@@ -35,27 +34,32 @@ public class Huffman implements Compressor {
 
         // Write the message
         BitsOutputStream content = new BitsOutputStream();
-        int currentChar;
-        while ((currentChar = input.read()) != -1) {
-            Bits code = symbolTable.get(currentChar);
+        for (byte b : inputData) {
+            char currentChar = (char) b;
+            Bits code = symbolTable.get((int) currentChar);
             content.write(code);
         }
 
         output.write(content.toByteArray());
     }
 
-    private HashMap<Character, Integer> concurrenceMap(InputStream input) throws IOException {
-        HashMap<Character, Integer> concurrenceMap = new HashMap<>();
-        int i;
-        char c;
+    private byte[] captureInput(InputStream input) throws IOException {
+        ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
+        byte[] buffer = new byte[1024];
+        int bytesRead;
+        while ((bytesRead = input.read(buffer)) != -1) {
+            byteArrayOutputStream.write(buffer, 0, bytesRead);
+        }
+        return byteArrayOutputStream.toByteArray();
+    }
 
-        while ((i = input.read()) != -1) {
-            c = (char) i;
+
+    private HashMap<Character, Integer> concurrenceMap(byte[] inputData) {
+        HashMap<Character, Integer> concurrenceMap = new HashMap<>();
+        for (byte b : inputData) {
+            char c = (char) b;
             concurrenceMap.put(c, concurrenceMap.getOrDefault(c, 0) + 1);
         }
-
-        input.reset(); // Resetting the input stream to read it again. This assumes the input supports reset.
-
         return concurrenceMap;
     }
 
@@ -94,31 +98,59 @@ public class Huffman implements Compressor {
 
     @Override
     public void decode(@NotNull InputStream input, @NotNull OutputStream output) throws IOException {
-        Map<Bits, Integer> symbolTable = readSymbolTable(input);
-
-        // Read Message Size
+        // Fixed the reading of symbol table size
         byte[] sizeBytes = new byte[4];
         input.read(sizeBytes);
-        int messageSize = ByteBuffer.wrap(sizeBytes).getInt();
+        int stSize = ByteBuffer.wrap(sizeBytes).getInt();
+
+        Map<Bits, Integer> symbolTable = readSymbolTable(input, stSize);
+        Node root = buildDecodingTree(symbolTable);
 
         // Decode Message
-        int pos = 0;
-        int current = -1;
-        for (int i = 0; i < messageSize; i++) {
-            Integer character = null;
-            final Bits bits = new Bits();
-            while (character == null) {
-                pos = pos % 8;
-                if (pos == 0) current = input.read();
-                bits.add(bitAt(current, pos++));
-                character = symbolTable.get(bits);
+        Node currentNode = root;
+        int currentByte = input.read();
+        int bitPos = 0;
+        while (currentByte != -1) {
+            boolean bit = bitAt(currentByte, bitPos);
+            bitPos++;
+            if (bitPos == 8) {
+                bitPos = 0;
+                currentByte = input.read();
             }
-            output.write(character);
+            currentNode = bit ? currentNode.right : currentNode.left;
+            if (currentNode.isLeaf()) {
+                output.write(currentNode.character);
+                currentNode = root;  // Reset for the next character
+            }
         }
     }
 
-    private Map<Bits, Integer> readSymbolTable(InputStream input) throws IOException {
-        int stSize = input.read();
+    private Node buildDecodingTree(Map<Bits, Integer> symbolTable) {
+        Node root = new Node(null, 0);
+        for (Map.Entry<Bits, Integer> entry : symbolTable.entrySet()) {
+            Bits encodedBits = entry.getKey();
+            Integer character = entry.getValue();
+            Node currentNode = root;
+            for (int i = 0; i < encodedBits.getLength(); i++) {
+                boolean bit = ((encodedBits.getValue() >> (encodedBits.getLength() - i - 1)) & 1) == 1;
+                if (bit) {
+                    if (currentNode.right == null) {
+                        currentNode.right = new Node(null, 0);
+                    }
+                    currentNode = currentNode.right;
+                } else {
+                    if (currentNode.left == null) {
+                        currentNode.left = new Node(null, 0);
+                    }
+                    currentNode = currentNode.left;
+                }
+            }
+            currentNode.character = character;
+        }
+        return root;
+    }
+
+    private Map<Bits, Integer> readSymbolTable(InputStream input, int stSize) throws IOException {
         Map<Bits, Integer> symbolTable = new HashMap<>();
 
         for (int i = 0; i < stSize; i++) {
