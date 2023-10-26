@@ -3,9 +3,9 @@ package anaydis.compression;
 import anaydis.bit.Bits;
 import java.util.Map;
 public class Node implements Comparable<Node> {
-    public int character; // The character this node represents (null for internal nodes)
-    public Node left;  // Left child
-    public Node right; // Right child
+    public char character;
+    public Node left;
+    public Node right;
     int frequency;
 
     // Constructor for leaf nodes
@@ -28,7 +28,7 @@ public class Node implements Comparable<Node> {
         return left == null && right == null;
     }
 
-    public void collect(Map<Integer, Bits> result, Bits bits){
+    public void collect(Map<Character, Bits> result, Bits bits){
         if(isLeaf())
             result.put(character, bits);
         else {
