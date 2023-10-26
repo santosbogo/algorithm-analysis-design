@@ -3,6 +3,7 @@ package anaydis.compression;
 import anaydis.bit.Bits;
 import anaydis.bit.BitsOutputStream;
 import anaydis.search.OrderedArrayPriorityQueue;
+import anaydis.search.PriorityQueue;
 import org.jetbrains.annotations.NotNull;
 
 import java.io.IOException;
@@ -72,20 +73,20 @@ public class Huffman implements Compressor{
     }
 
     private PriorityQueue<Node> generateHuffmanTrie(HashMap<Character, Integer> concurrenceMap){
-        PriorityQueue<Node> table = new PriorityQueue<>();
+        PriorityQueue<Node> table = new OrderedArrayPriorityQueue<>(Node::compareTo);
 
         //Insert characters into the priority queue
         for (char i : concurrenceMap.keySet()) {
             Node node = new Node(i, concurrenceMap.get(i));
-            table.add(node);
+            table.insert(node);
         }
 
         //Create the huffman trie
         while (table.size() != 1) {
-            Node left = table.poll();
-            Node right = table.poll();
+            Node left = table.pop();
+            Node right = table.pop();
             Node node = new Node(left, right); //New frequency is left + right
-            table.add(node);
+            table.insert(node);
         }
 
         return table;
@@ -96,10 +97,10 @@ public class Huffman implements Compressor{
         if (table.isEmpty()) return Collections.emptyMap();
 
         //Just one symbol
-        if (table.peek().isLeaf()) return Collections.singletonMap((char) table.poll().frequency, new Bits().add(false));
+        if (table.peek().isLeaf()) return Collections.singletonMap((char) table.pop().frequency, new Bits().add(false));
 
         //Many symbols
-        final Node root = table.poll();
+        final Node root = table.pop();
         final Map<Character, Bits> result = new LinkedHashMap<>();
         root.collect(result, new Bits());
         return result;
