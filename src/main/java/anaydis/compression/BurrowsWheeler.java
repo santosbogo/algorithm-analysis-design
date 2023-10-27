@@ -52,8 +52,11 @@ public class BurrowsWheeler implements Compressor {
 
     @Override
     public void decode(@NotNull InputStream input, @NotNull OutputStream output) throws IOException {
-        String bwtString = new String(input.readAllBytes(), 0, input.available() - 1); // read all but the last byte
-        int originalIndex = input.read(); // read the last byte as the index
+        byte[] inputData = new byte[input.available()];
+        input.read(inputData);
+        String bwtString = new String(inputData, 0, inputData.length - 1); // read all but the last byte
+        int originalIndex = inputData[inputData.length - 1] & 0xFF; // read the last byte as the index
+
         String[] decoding = new String[bwtString.length()];
         for (int i = 0; i < decoding.length; i++) {
             decoding[i] = "";
