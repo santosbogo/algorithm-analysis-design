@@ -5,69 +5,109 @@ import org.jetbrains.annotations.NotNull;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.nio.ByteBuffer;
 import java.util.Arrays;
+import java.util.Comparator;
 
 public class BurrowsWheeler implements Compressor {
 
     @Override
     public void encode(@NotNull InputStream input, @NotNull OutputStream output) throws IOException {
-        byte[] inputData = new byte[input.available()];
-        input.read(inputData);
-        String inputString = new String(inputData);
+        String message = inputToString(input);
+        int size = message.length();
 
-        int originalIndex = 0;
+        Integer[] indices = new Integer[size];
 
-
-        // Create an array of indices
-        Integer[] indices = new Integer[inputString.length()];
-        for (int i = 0; i < inputString.length(); i++) {
+        for (int i = 0; i < size; i++) {
             indices[i] = i;
         }
 
-        // Sort the indices based on the lexicographic order of the rotations they represent
-        Arrays.sort(indices, (i1, i2) -> {
-            for (int offset = 0; offset < inputString.length(); offset++) {
-                int pos1 = (i1 + offset) % inputString.length();
-                int pos2 = (i2 + offset) % inputString.length();
-                if (inputString.charAt(pos1) != inputString.charAt(pos2)) {
-                    return Character.compare(inputString.charAt(pos1), inputString.charAt(pos2));
+        Arrays.sort(indices, new Comparator<Integer>() {
+            @Override
+            public int compare(Integer i1, Integer i2) {
+                for (int offset = 0; offset < size; offset++) {
+                    char c1 = message.charAt((i1 + offset) % message.length());
+                    char c2 = message.charAt((i2 + offset) % message.length());
+                    if (c1 != c2) {
+                        return Character.compare(c1, c2);
+                    }
                 }
+                return 0;
             }
-            return 0;
         });
 
-        // Construct the BWT output using the sorted indices
-        StringBuilder bwtBuilder = new StringBuilder();
-        for (int index : indices) {
-            int lastIndex = (index - 1 + inputString.length()) % inputString.length();
-            bwtBuilder.append(inputString.charAt(lastIndex));
-            if (index == 0) {
-                originalIndex = bwtBuilder.length() - 1;
-            }
+        //Construct the coded message
+        StringBuilder codedMessage = new StringBuilder();
+        for (int i = 0; i < size; i++) {
+            char character = message.charAt((indices[i] - 1 + size) % size);
+            codedMessage.append(character);
         }
 
-        output.write(bwtBuilder.toString().getBytes());
-        output.write(originalIndex);
+        //Write the position of the original message in the last 4 bytes
+        int originalPosition = Arrays.asList(indices).indexOf(0);
+        byte[] positionBytes = ByteBuffer.allocate(4).putInt(originalPosition).array();
+        output.write(positionBytes);
+
+        //Write the coded message
+        output.write(codedMessage.toString().getBytes());
+
+    }
+
+    private String inputToString(InputStream input) throws IOException {
+
+        byte[] inputData = new byte[input.available()];
+        StringBuilder stringBuilder = new StringBuilder();
+        int bytesRead;
+        while ((bytesRead = input.read(inputData)) != -1) {
+            stringBuilder.append(new String(inputData, 0, bytesRead));
+        }
+
+        return stringBuilder.toString();
     }
 
     @Override
     public void decode(@NotNull InputStream input, @NotNull OutputStream output) throws IOException {
-        byte[] inputData = new byte[input.available()];
-        input.read(inputData);
-        String bwtString = new String(inputData, 0, inputData.length - 1); // read all but the last byte
-        int originalIndex = inputData[inputData.length - 1] & 0xFF; // read the last byte as the index
+        int originalMessagePosition = readOriginalMessagePosition(input);
+        String encodedMessage = inputToString(input);
+        int messageSize = encodedMessage.length();
 
-        String[] decoding = new String[bwtString.length()];
-        for (int i = 0; i < decoding.length; i++) {
-            decoding[i] = "";
+        char[] firstColumn = encodedMessage.toCharArray();
+        Arrays.sort(firstColumn);
+
+        int[] t = buildT(firstColumn, encodedMessage.toCharArray());
+
+        StringBuilder originalMessage = new StringBuilder();
+        int index = originalMessagePosition;
+        for (int i = 0; i < messageSize; i++) {
+            originalMessage.append(encodedMessage.charAt(index));
+            index = t[index];
         }
-        for (int j = 0; j < bwtString.length(); j++) {
-            for (int i = 0; i < bwtString.length(); i++) {
-                decoding[i] = bwtString.charAt(i) + decoding[i];
-            }
-            Arrays.sort(decoding);
+
+        output.write(originalMessage.toString().getBytes());
+    }
+
+    private Integer readOriginalMessagePosition(InputStream input) throws IOException {
+        byte[] sizeBytes = new byte[4];
+        input.read(sizeBytes);
+        return ByteBuffer.wrap(sizeBytes).getInt();
+    }
+
+    private int[] buildT(char[] firstColumn, char[] lastColumn) {
+        int[] t = new int[firstColumn.length];
+        int[] nextAvailable = new int[256];  // Assuming extended ASCII
+
+        for (int i = 0; i < firstColumn.length; i++) {
+            char c = lastColumn[i];
+            t[i] = indexOf(firstColumn, c, nextAvailable[c]++);
         }
-        String decodedString = decoding[originalIndex];
-        output.write(decodedString.getBytes());
+
+        return t;
+    }
+
+    private int indexOf(char[] column, char c, int fromIndex) {
+        for (int i = fromIndex; i < column.length; i++) {
+            if (column[i] == c) return i;
+        }
+        return -1;
     }
 }
