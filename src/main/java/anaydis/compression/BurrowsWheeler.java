@@ -6,8 +6,10 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.nio.ByteBuffer;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Comparator;
+import java.util.List;
 
 public class BurrowsWheeler implements Compressor {
 
@@ -54,15 +56,15 @@ public class BurrowsWheeler implements Compressor {
     }
 
     private String inputToString(InputStream input) throws IOException {
+        StringBuilder chars = new StringBuilder();
+        int current = input.read();
 
-        byte[] inputData = new byte[input.available()];
-        StringBuilder stringBuilder = new StringBuilder();
-        int bytesRead;
-        while ((bytesRead = input.read(inputData)) != -1) {
-            stringBuilder.append(new String(inputData, 0, bytesRead));
+        while (current != -1){
+            chars.append((char) current);
+            current = input.read();
         }
 
-        return stringBuilder.toString();
+        return chars.toString();
     }
 
     @Override
