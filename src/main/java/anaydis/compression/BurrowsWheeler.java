@@ -11,8 +11,12 @@ public class BurrowsWheeler implements Compressor {
 
     @Override
     public void encode(@NotNull InputStream input, @NotNull OutputStream output) throws IOException {
-        String inputString = new String(input.readAllBytes());
+        byte[] inputData = new byte[input.available()];
+        input.read(inputData);
+        String inputString = new String(inputData);
+
         int originalIndex = 0;
+
 
         // Create an array of indices
         Integer[] indices = new Integer[inputString.length()];
