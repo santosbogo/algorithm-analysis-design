@@ -2,14 +2,11 @@ package anaydis.compression;
 
 import org.jetbrains.annotations.NotNull;
 
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStream;
+import java.io.*;
 import java.nio.ByteBuffer;
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Comparator;
-import java.util.List;
+
 
 public class BurrowsWheeler implements Compressor {
 
@@ -69,47 +66,47 @@ public class BurrowsWheeler implements Compressor {
 
     @Override
     public void decode(@NotNull InputStream input, @NotNull OutputStream output) throws IOException {
-        int originalMessagePosition = readOriginalMessagePosition(input);
-        String encodedMessage = inputToString(input);
-        int messageSize = encodedMessage.length();
-
-        char[] firstColumn = encodedMessage.toCharArray();
-        Arrays.sort(firstColumn);
-
-        int[] t = buildT(firstColumn, encodedMessage.toCharArray());
-
-        StringBuilder originalMessage = new StringBuilder();
-        int index = originalMessagePosition;
-        for (int i = 0; i < messageSize; i++) {
-            originalMessage.append(encodedMessage.charAt(index));
-            index = t[index];
-        }
-
-        output.write(originalMessage.toString().getBytes());
     }
 
-    private Integer readOriginalMessagePosition(InputStream input) throws IOException {
-        byte[] sizeBytes = new byte[4];
-        input.read(sizeBytes);
-        return ByteBuffer.wrap(sizeBytes).getInt();
-    }
+    public static void main(String[] args) throws IOException {
+        // Convert binary strings to bytes
+        String[] binaryStrings = {
+                "1100001", "1100001", "1100001", "1100001", "1100001", "1100001", "1100001", "1100001", "1100001",
+                "100000", "1100001", "1101101", "1100001", "1110011", "1100001", "100000", "1100001", "1101101",
+                "1100001", "1110011", "1100001", "100000", "1100001", "1101101", "1100001", "1110011", "1100001"
+        };
 
-    private int[] buildT(char[] firstColumn, char[] lastColumn) {
-        int[] t = new int[firstColumn.length];
-        int[] nextAvailable = new int[256];  // Assuming extended ASCII
-
-        for (int i = 0; i < firstColumn.length; i++) {
-            char c = lastColumn[i];
-            t[i] = indexOf(firstColumn, c, nextAvailable[c]++);
+        byte[] inputData = new byte[binaryStrings.length];
+        for (int i = 0; i < binaryStrings.length; i++) {
+            inputData[i] = (byte) Integer.parseInt(binaryStrings[i], 2);
         }
 
-        return t;
-    }
+        ByteArrayInputStream input = new ByteArrayInputStream(inputData);
 
-    private int indexOf(char[] column, char c, int fromIndex) {
-        for (int i = fromIndex; i < column.length; i++) {
-            if (column[i] == c) return i;
+        // Step 2: Encode the input
+        BurrowsWheeler bwt = new BurrowsWheeler();
+        ByteArrayOutputStream encodedOutput = new ByteArrayOutputStream();
+        bwt.encode(input, encodedOutput);
+
+        byte[] encodedBytes = encodedOutput.toByteArray();
+        System.out.println("Encoded Bytes:");
+        for (byte b : encodedBytes) {
+            System.out.print(b + " ");
         }
-        return -1;
+        System.out.println();
+
+        // Step 3: Decode the encoded message
+        ByteArrayInputStream encodedInput = new ByteArrayInputStream(encodedBytes);
+        ByteArrayOutputStream decodedOutput = new ByteArrayOutputStream();
+        bwt.decode(encodedInput, decodedOutput);
+
+        byte[] decodedBytes = decodedOutput.toByteArray();
+        System.out.println("Decoded Bytes:");
+        for (byte b : decodedBytes) {
+            System.out.print(b + " ");
+        }
+        System.out.println();
+
+
     }
 }
