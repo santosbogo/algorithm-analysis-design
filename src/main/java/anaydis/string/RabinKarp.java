@@ -5,6 +5,12 @@ import org.jetbrains.annotations.NotNull;
 import java.util.Iterator;
 
 public class RabinKarp implements StringSearcher{
+    private String text;
+
+    public RabinKarp(String text) {
+        this.text = text;
+    }
+
     @Override
     public int count(@NotNull String pattern) {
         return 0;

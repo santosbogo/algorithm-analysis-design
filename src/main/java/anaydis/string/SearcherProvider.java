@@ -9,9 +9,9 @@ public class SearcherProvider implements StringSearcherProvider{
 
     private Map<StringSearcherType, StringSearcher> stringSearchers = new EnumMap<>(StringSearcherType.class);
 
-    public SearcherProvider(){
-        stringSearchers.put(StringSearcherType.BRUTE_FORCE, new BruteForce());
-        stringSearchers.put(StringSearcherType.RABIN_KARP, new RabinKarp());
+    public SearcherProvider(String text){
+        stringSearchers.put(StringSearcherType.BRUTE_FORCE, new BruteForce(text));
+        stringSearchers.put(StringSearcherType.RABIN_KARP, new RabinKarp(text));
     }
     @Override
     public @NotNull StringSearcher getForType(@NotNull StringSearcherType type, @NotNull String text) {
