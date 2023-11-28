@@ -19,14 +19,12 @@ public class QuickSorterThreeWayPartitioning extends AbstractSorter {
 
         if (high <= low) return;
 
-        T pivot = list.get(low);
         int lt = low, gt = high;
         int i = low + 1;
 
         while (i <= gt) {
-            int cmp = comparator.compare(list.get(i), pivot);
-            if (cmp < 0) exch(list, lt++, i++);
-            else if (cmp > 0) exch(list, i, gt--);
+            if (less(list, i, low, comparator)) exch(list, lt++, i++);
+            else if (less(list, low, i, comparator)) exch(list, i, gt--);
             else i++;
         }
 

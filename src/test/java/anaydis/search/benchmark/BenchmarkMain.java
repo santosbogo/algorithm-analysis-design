@@ -25,7 +25,7 @@ public class BenchmarkMain {
         Map<String, Integer> Binary = new BinaryTrieMap<>();
 
         //Add the maps to the list of maps
-        maps. add (RWay);
+        maps.add (RWay);
         maps.add (TST);
         maps.add(Binary);
 

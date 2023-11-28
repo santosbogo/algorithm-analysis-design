@@ -27,7 +27,7 @@ abstract class SorterTest extends AbstractSorterTest {
 
     @Test
     public void QuickSorterRandomOrderTest(){
-        List<Integer> random = new IntegerDataSetGenerator().createRandom(100);
+        List<Integer> random = new IntegerDataSetGenerator().createRandom(100000);
 
         //Sort with Java.util that i am sure it works
         List<Integer> javaRandom = random;
