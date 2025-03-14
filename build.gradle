@@ -1,3 +1,4 @@
+
 apply plugin: 'idea'
 apply plugin: 'java'
 
@@ -11,6 +12,12 @@ idea {
         downloadSources = true
     }
 }
+//
+java {
+    toolchain {
+        languageVersion = JavaLanguageVersion.of(8)
+    }
+}
 
 repositories {
     // Central Repository
@@ -19,24 +26,20 @@ repositories {
     // GitHub Packages
     maven {
         url = uri("https://maven.pkg.github.com/FacultadDeIngenieria/*")
-        def packageReaderSecret = "Z2hwX2Y0TDdnY25pY1NvQzJkRWlhSkhXSzZvdzY2Q1FQTTRmRkE2Nw=="
-        def packageReaderToken = new String(packageReaderSecret.decodeBase64())
         credentials {
-            username = "public"
-            password = project.findProperty("gpr.token") ?: System.getProperty("gpr.token") ?: System.getenv("GH_TOKEN") ?: packageReaderToken
+            username = project.findProperty("gpr.user") ?: System.getenv("GITHUB_USER") ?: "public"
+            password = project.findProperty("gpr.token") ?: System.getenv("GITHUB_TOKEN") ?: ""
         }
     }
 }
 
 dependencies {
     /* Compile scope */
-    implementation 'ar.edu.austral.fi.anaydis:anaydis-anim:1.3.13'
-    implementation 'ar.edu.austral.fi.anaydis:anaydis-base:1.3.14'
+    implementation 'ar.edu.austral.fi.algorithms:algorithms-base:1.0.5'
     implementation 'org.jetbrains:annotations:22.0.0'
 
     /* Test scope */
-    testImplementation 'ar.edu.austral.fi.anaydis:anaydis-test:1.3.13'
     testImplementation 'org.assertj:assertj-core:3.20.2'
     testImplementation 'junit:junit:4.13'
-    testImplementation 'org.junit.jupiter:junit-jupiter:5.8.1'
 }
+
