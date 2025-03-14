@@ -19,8 +19,6 @@ repositories {
     // GitHub Packages
     maven {
         url = uri("https://maven.pkg.github.com/FacultadDeIngenieria/*")
-        def packageReaderSecret = "Z2hwX2Y0TDdnY25pY1NvQzJkRWlhSkhXSzZvdzY2Q1FQTTRmRkE2Nw=="
-        def packageReaderToken = new String(packageReaderSecret.decodeBase64())
         credentials {
             username = project.findProperty("gpr.user") ?: System.getenv("GITHUB_USER") ?: "public"
             password = project.findProperty("gpr.token") ?: System.getenv("GITHUB_TOKEN") ?: ""
