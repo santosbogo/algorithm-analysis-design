@@ -1,8 +1,8 @@
-package anaydis.priorityQueue.PriorityQueueBenchmark;
+package anaydis.priorityqueue.priorityqueuebenchmark;
 
-import anaydis.priorityQueue.HeapPriorityQueue;
-import anaydis.priorityQueue.OrderedArrayPriorityQueue;
-import anaydis.priorityQueue.UnorderedArrayPriorityQueue;
+import anaydis.priorityqueue.HeapPriorityQueue;
+import anaydis.priorityqueue.OrderedArrayPriorityQueue;
+import anaydis.priorityqueue.UnorderedArrayPriorityQueue;
 import anaydis.search.*;
 import anaydis.sort.DataSetGenerator;
 import anaydis.sort.IntegerDataSetGenerator;

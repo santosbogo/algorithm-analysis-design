@@ -1,4 +1,4 @@
-package anaydis.priorityQueue;
+package anaydis.priorityqueue;
 
 import anaydis.search.PriorityQueue;
 import org.jetbrains.annotations.NotNull;

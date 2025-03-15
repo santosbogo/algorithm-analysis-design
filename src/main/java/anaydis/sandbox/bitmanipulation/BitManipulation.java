@@ -1,4 +1,4 @@
-package anaydis.sandbox.bitManipulation;
+package anaydis.sandbox.bitmanipulation;
 
 public class BitManipulation {
 

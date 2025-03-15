@@ -24,7 +24,6 @@ public class SorterReports {
         testSorter(new SelectionSorter());
     }
 
-    // Add similar methods for other sorting algorithms
 
     private void testSorter(Sorter sorter) {
         Comparator comparator = Comparator.naturalOrder();
@@ -60,8 +59,6 @@ public class SorterReports {
             System.out.println(ascendingTime);
             System.out.println(descendingTime);
             System.out.println(randomTime);
-
-
         }
     }
 }
