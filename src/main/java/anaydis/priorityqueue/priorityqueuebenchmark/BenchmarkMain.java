@@ -5,7 +5,7 @@ import anaydis.priorityqueue.OrderedArrayPriorityQueue;
 import anaydis.priorityqueue.UnorderedArrayPriorityQueue;
 import anaydis.search.*;
 import anaydis.sort.DataSetGenerator;
-import anaydis.sort.IntegerDataSetGenerator;
+import anaydis.sorting.IntegerDataSetGenerator;
 
 import java.util.Comparator;
 import java.util.HashMap;

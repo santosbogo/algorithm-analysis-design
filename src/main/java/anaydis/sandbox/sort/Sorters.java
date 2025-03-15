@@ -1,10 +1,6 @@
 package anaydis.sandbox.sort;
 
-import anaydis.sort.IntegerDataSetGenerator;
-import anaydis.sort.QuickSorter;
-
 import java.util.Comparator;
-import java.util.Iterator;
 import java.util.List;
 
 public class Sorters<T> {
