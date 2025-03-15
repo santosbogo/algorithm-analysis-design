@@ -1,4 +1,4 @@
-package anaydis.priorityqueue.priorityqueuebenchmark;
+package anaydis.priorityqueue.benchmark;
 
 import anaydis.search.PriorityQueue;
 

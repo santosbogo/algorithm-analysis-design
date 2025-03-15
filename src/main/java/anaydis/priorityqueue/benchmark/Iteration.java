@@ -1,4 +1,4 @@
-package anaydis.priorityqueue.priorityqueuebenchmark;
+package anaydis.priorityqueue.benchmark;
 
 public class Iteration {
     private final Scene scene;
