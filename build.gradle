@@ -1,6 +1,27 @@
 apply plugin: 'idea'
 apply plugin: 'java'
 
+tasks.register('runSortingBenchmark', JavaExec) {
+    group = 'benchmark'
+    description = 'Runs the sorting benchmark'
+    classpath = sourceSets.main.runtimeClasspath
+    mainClass = 'anaydis.sorting.benchmark.BenchmarkMain'
+}
+
+tasks.register('runSearchingBenchmark', JavaExec) {
+    group = 'benchmark'
+    description = 'Runs the searching benchmark'
+    classpath = sourceSets.main.runtimeClasspath
+    mainClass = 'anaydis.searching.benchmark.BenchmarkMain'
+}
+
+tasks.register('runPriorityQueueBenchmark', JavaExec) {
+    group = 'benchmark'
+    description = 'Runs the priority queue benchmark'
+    classpath = sourceSets.main.runtimeClasspath
+    mainClass = 'anaydis.priorityqueue.benchmark.BenchmarkMain'
+}
+
 idea {
     project {
         //Set specific jdk and language level

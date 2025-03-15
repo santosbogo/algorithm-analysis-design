@@ -1,19 +1,72 @@
-# Análisis y Diseño de Algoritmos
+# Algorithm Analysis and Design
 
-¡Bienvenido a tu repositorio de trabajo!
+📚 **Course:** Algorithm Analysis and Design
 
-## Develop
-Este proyecto está configurado con Gradle como _build tool_. Podés abrirlo directamente desde tu IDE de preferencia eligiendo esta carpeta y aceptando Gradle como tipo de proyecto.
+🎓 **University:** Austral Univerity
 
-Tu primera implementación será de los [Sorters](src/main/java/anaydis/sort/AbstractSorter.java).
+👤 **Author:** Santos Bogo (https://github.com/santosbogo)
 
-## Compile & Test
-Tu IDE va a quedar listo para compilar tu proyecto sin que tengas que configurar nada extra. **Recordá siempre manejar la configuración desde Gradle** ([build.gradle](build.gradle)) y actualizar el proyecto en el IDE, en lugar de hacerlo en el IDE directamente. Para compilar tu proyecto desde la terminal y correr los tests:
-```
-./gradlew clean test
-```
+## 📖 Repository Overview
+This repository contains implementations of sorting, searching, compression algorithms, and advanced data structures, along with performance benchmarks.
 
-Ya tenés [Tests](src/test/java/anaydis/sort) de ejemplo en el scope de _test_.
+### 🔹 Sorting Algorithms
+- Selection Sort
+- Insertion Sort
+- Bubble Sort
+- Shell Sort
+- Quicksort (Recursive, Non-Recursive, Hybrid, Median of Three, Three-Way Partitioning)
+- Merge Sort (Top-Down, Bottom-Up)
 
-## Commit & Push
-Recordá capturar los cambios que vayas realizando periodicamente en diferentes `commits` y llevá esos cambios al repositorio remoto vía `push`. Únicamente al _pushear_ esos cambios, se actualizará el CI (continuous integration) del TeamCity. 
+**🔍 Analysis:**
+Performance evaluation measuring **swaps, comparisons, and execution time** for different input sizes.
+
+### 🔹 Searching Algorithms
+- **Tries:** Binary Search Trie, R-Way Trie, Ternary Search Trie
+- **Benchmark:** Inserted all words from *Don Quixote* into a trie, then reversed the letters and searched them to measure the average miss and hit times.
+
+### 🔹 Priority Queues
+- OrderedArrayPriorityQueue
+- UnorderedArrayPriorityQueue
+- HeapPriorityQueue
+**🔍 Benchmark:** Compared efficiency with different input sizes.
+
+### 🔹 Immutability
+- BankersQueue
+- Immutable BinaryTree
+
+### 🔹 Compression Algorithms
+- Run-Length Encoding
+- Burrows-Wheeler
+- Huffman
+
+### 🔹 String Searching Algorithms
+- Brute Force
+- Rabin-Karp
+
+📑 **Reports and Benchmarks:**  
+You can view the analysis results in the following spreadsheet:  
+🔗 [Google Sheets - Reports](https://docs.google.com/spreadsheets/d/1VtNNalax8IUBDprILhsCsBJfaXS_gK31qDMdjbVJewE/edit?usp=sharing)
+
+## 🚀 Installation & Usage
+```sh
+git clone https://github.com/yourusername/algorithm-analysis-design.git
+cd algorithm-analysis-design
+````
+
+### 🔹 Run Benchmarks  
+The following Gradle tasks are available to execute benchmarks:
+
+- **Sorting Algorithms Benchmark:**  
+  ```sh
+  ./gradlew runSortingBenchmark
+  ```
+- **Searching Algorithms Benchmark:**
+  ```sh
+  ./gradlew runSearchingBenchmark
+  ```
+- **Priority Queue Benchmark:**
+  ```sh
+  ./gradlew runPriorityQueueBenchmark
+  ```
+
+---
