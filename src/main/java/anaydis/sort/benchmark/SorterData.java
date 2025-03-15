@@ -1,4 +1,4 @@
-package anaydis.sort.Benchmark;
+package anaydis.sort.benchmark;
 
 import anaydis.sort.Sorter;
 
