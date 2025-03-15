@@ -1,6 +1,5 @@
 package anaydis.sort.Benchmark;
 
-import anaydis.immutable.List;
 import anaydis.sort.*;
 
 public class BenchmarkMain {

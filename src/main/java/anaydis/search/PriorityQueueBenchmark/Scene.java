@@ -1,6 +1,5 @@
 package anaydis.search.PriorityQueueBenchmark;
 
-import anaydis.search.Map;
 import anaydis.search.PriorityQueue;
 
 public class Scene {

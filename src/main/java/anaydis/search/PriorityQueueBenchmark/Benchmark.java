@@ -1,11 +1,9 @@
 package anaydis.search.PriorityQueueBenchmark;
 
 import anaydis.search.*;
-import anaydis.search.benchmark.Iteration;
 import anaydis.sort.DataSetGenerator;
 import anaydis.sort.IntegerDataSetGenerator;
 
-import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
