@@ -1,9 +1,6 @@
-package anaydis.sort.NameSorting;
+package anaydis.sort.nameSorting;
 
-import anaydis.sort.BubbleSorter;
-import anaydis.sort.HSorter;
 import anaydis.sort.InsertionSorter;
-import anaydis.sort.SorterType;
 import org.junit.Test;
 
 import java.util.Iterator;

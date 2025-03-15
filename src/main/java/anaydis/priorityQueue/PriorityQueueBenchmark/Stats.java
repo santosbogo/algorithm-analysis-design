@@ -1,4 +1,4 @@
-package anaydis.search.PriorityQueueBenchmark;
+package anaydis.priorityQueue.PriorityQueueBenchmark;
 public class Stats {
     private final long insertionTime;
     private final long removalTime;

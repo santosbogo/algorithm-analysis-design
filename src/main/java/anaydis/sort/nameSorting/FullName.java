@@ -1,9 +1,4 @@
-package anaydis.sort.NameSorting;
-
-import anaydis.sort.BubbleSorter;
-import anaydis.sort.SorterType;
-
-import java.util.List;
+package anaydis.sort.nameSorting;
 
 public class FullName {
     private String firstname;

@@ -1,5 +1,6 @@
-package anaydis.search;
+package anaydis.priorityQueue;
 
+import anaydis.search.PriorityQueue;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;

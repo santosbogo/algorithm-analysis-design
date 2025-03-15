@@ -1,10 +1,6 @@
 package anaydis.sort;
 
-import anaydis.sort.NameSorting.FullName;
-import anaydis.sort.NameSorting.NameComparator;
-
 import java.util.Comparator;
-import java.util.LinkedList;
 import java.util.List;
 import org.junit.Test;
 

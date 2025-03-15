@@ -1,4 +1,4 @@
-package anaydis.sort.NameSorting;
+package anaydis.sort.nameSorting;
 
 import java.util.Comparator;
 

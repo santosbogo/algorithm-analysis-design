@@ -2,7 +2,6 @@ package anaydis.compression;
 
 import anaydis.bit.Bits;
 import anaydis.bit.BitsOutputStream;
-import anaydis.search.OrderedArrayPriorityQueue;
 import org.jetbrains.annotations.NotNull;
 
 import java.io.IOException;

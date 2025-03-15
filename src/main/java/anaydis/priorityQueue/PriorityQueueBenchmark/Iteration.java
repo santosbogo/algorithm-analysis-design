@@ -1,4 +1,4 @@
-package anaydis.search.PriorityQueueBenchmark;
+package anaydis.priorityQueue.PriorityQueueBenchmark;
 
 public class Iteration {
     private final Scene scene;
