@@ -15,26 +15,33 @@ public class QuickSorterMedianOfThree extends AbstractSorter{
 
     @Override
     public <T> void sort(@NotNull Comparator<T> comparator, @NotNull List<T> list) {
-
-        InsertionSorter insertion = new InsertionSorter();
-
         sort(list, comparator, 0, list.size() - 1);
-        insertion.sort(comparator, list);
+        new InsertionSorter().sort(comparator, list);
     }
 
     private <T> void sort(List<T> list, Comparator<T> comparator, int low, int high) {
-        if (M < high - low) {
-            int partitionIndex = partition(list, comparator, low, high);
+        while (high - low > M) {
+            int pivotIndex = medianOfThree(list, comparator, low, high);
+            exch(list, pivotIndex, high - 1);
 
-            exch(list, (low + high) / 2, high-1);
-            compExch(list, low, high - 1, comparator);
-            compExch(list, low, high, comparator);
-            compExch(list, high-1, high, comparator);
-            int i = partition(list, comparator, low + 1, high - 1);
+            int partitionIndex = partition(list, comparator, low, high - 1);
 
-            sort(list, comparator, low, partitionIndex - 1);
-            sort(list, comparator, partitionIndex + 1, high);
+            if (partitionIndex - low < high - partitionIndex) {
+                sort(list, comparator, low, partitionIndex - 1);
+                low = partitionIndex + 1;
+            } else {
+                sort(list, comparator, partitionIndex + 1, high);
+                high = partitionIndex - 1;
+            }
         }
+    }
+
+    private <T> int medianOfThree(List<T> list, Comparator<T> comparator, int low, int high) {
+        int mid = (low + high) / 2;
+        compExch(list, low, mid, comparator);
+        compExch(list, low, high, comparator);
+        compExch(list, mid, high, comparator);
+        return mid;
     }
 
     @Override
