@@ -49,7 +49,7 @@ You can view the analysis results in the following spreadsheet:
 
 ## 🚀 Installation & Usage
 ```sh
-git clone https://github.com/yourusername/algorithm-analysis-design.git
+git clone https://github.com/santosbogo/algorithm-analysis-design.git
 cd algorithm-analysis-design
 ````
 
